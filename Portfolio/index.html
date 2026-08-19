@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia</title>
+<meta name="description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Waveform / playhead scroll indicator -->
+<div class="waveform-bar" aria-hidden="true">
+  <svg id="waveform-svg" viewBox="0 0 1000 40" preserveAspectRatio="none"></svg>
+  <div class="playhead" id="playhead"></div>
+</div>
+
+<nav class="nav">
+  <span class="nav-mark">D.E.F.</span>
+  <div class="nav-links">
+    <a href="#sobre-mi"><span class="tc">00:01</span>Sobre mí</a>
+    <a href="#proyectos"><span class="tc">00:02</span>Proyectos</a>
+    <a href="#skills"><span class="tc">00:03</span>Skills</a>
+    <a href="#contacto"><span class="tc">00:04</span>Contacto</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <span class="tc hero-tc">REC ● 02:02:19:85</span>
+    <h1>Daniel Estor Fuentes</h1>
+    <p class="hero-role">Técnico de sonido, productor musical y diseñador multimedia</p>
+    <p class="hero-tagline">Creador audiovisual especializado en sonido, vídeo y contenido interactivo.</p>
+    <a href="#sobre-mi" class="hero-cta">Ver el montaje <span aria-hidden="true">↓</span></a>
+  </section>
+
+  <!-- SOBRE MÍ -->
+  <section class="sobre-mi" id="sobre-mi">
+    <div class="section-head">
+      <span class="tc">00:01</span>
+      <h2>Sobre mí</h2>
+    </div>
+    <div class="bio-grid">
+      <!-- EDITA AQUÍ: texto de presentación (puedes añadir más párrafos <p class="bio-text">...</p>) -->
+      <div class="bio-text-group">
+        <p class="bio-text">
+          Soy Daniel Estor Fuentes, técnico de sonido, productor musical y diseñador multimedia. Máster en Diseño y Producción Multimedia por UNIR y grado en Producción de Música y Sonido para la Industria del Entretenimiento por ENTI–Universidad de Barcelona.
+        </p>
+        <p class="bio-text">
+          He trabajado como técnico de sonido en SGAE, Niñas del Mago (dúo de artistas de magia) y como técnico multimedia y realizador en RTV El Vendrell.
+        </p>
+      </div>
+      <!-- EDITA AQUÍ: datos rápidos (formación / experiencia / base) -->
+      <ul class="bio-facts">
+        <li><span class="tc">FORMACIÓN</span>Máster en Diseño y Producción Multimedia — UNIR<br>Grado en Producción de Música y Sonido — ENTI-UB</li>
+        <li><span class="tc">EXPERIENCIA</span>RTV El Vendrell · Niñas del Mago · SGAE</li>
+        <li><span class="tc">BASE</span>El Vendrell, Tarragona</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PROYECTOS -->
+  <section class="proyectos" id="proyectos">
+    <div class="section-head">
+      <span class="tc">00:02</span>
+      <h2>Proyectos</h2>
+      <p class="section-desc">Cuatro pistas, cuatro formas de contar algo.</p>
+    </div>
+
+    <div class="track-list">
+
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A1</span>
+          <span class="track-tag">Narrativa interactiva</span>
+        </div>
+        <h3>Pandemia: Feria de Abril</h3>
+        <p>Relato ramificado de 14 pasajes en Twine, con imágenes generadas por IA animadas en Runway Gen-4, montaje en CapCut y música original de Suno AI. Vídeo servido vía Vimeo, audio vía Cloudinary.</p>
+        <div class="track-wave" data-seed="1"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota: 10</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A2</span>
+          <span class="track-tag">Estrategia de contenido</span>
+        </div>
+        <h3>Mimetik BCN</h3>
+        <p>Estrategia de marketing digital para un atelier nupcial bohemio de Barcelona: auditoría de Instagram, cuatro segmentos de audiencia, calendario de contenido, estrategia de Etsy y Pinterest. Copy en español e inglés según plataforma.</p>
+        <div class="track-wave" data-seed="2"></div>
+        <div class="track-footer">
+          <span class="track-note">Marca real</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A3</span>
+          <span class="track-tag">Producción musical</span>
+        </div>
+        <h3>Transcripción SGAE</h3>
+        <p>Pipeline completo para registrar 12 cantos chamánicos: separación de stems (LALAL.AI), análisis de tono, generación MIDI silábica para voces con microtonalidad, y partitura final en MuseScore 4 vía Pro Tools.</p>
+        <div class="track-wave" data-seed="3"></div>
+        <div class="track-footer">
+          <span class="track-note">Pipeline técnico</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A4</span>
+          <span class="track-tag">Desarrollo · Unity</span>
+        </div>
+        <h3>Boo Reader</h3>
+        <p>App móvil de seguimiento de lectura desarrollada en Unity como Trabajo de Fin de Estudios, en equipo. Diseño de UI, lógica de progreso y validación en Play mode.</p>
+        <div class="track-wave" data-seed="4"></div>
+        <div class="track-footer">
+          <span class="track-note">Proyecto de equipo</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills" id="skills">
+    <div class="section-head">
+      <span class="tc">00:03</span>
+      <h2>Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.1</span>
+        <h3>Audio &amp; Sonido</h3>
+        <p>Pro Tools, Cubase, Logic, Reaper y Audacity.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.2</span>
+        <h3>Diseño Multimedia</h3>
+        <p>DaVinci Resolve, Edius, Maya, Adobe Suite, Canva y Genially.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.3</span>
+        <h3>Motores de Juego</h3>
+        <p>Unreal Engine 5 y Unity.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.4</span>
+        <h3>Middleware</h3>
+        <p>FMOD y Wwise.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.5</span>
+        <h3>Programación</h3>
+        <p>WebStorm, Node.js, Visual Studio Code, Figma y Twine.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.6</span>
+        <h3>Ofimática</h3>
+        <p>Word, Excel y Google Workspace.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contacto" id="contacto">
+    <div class="section-head">
+      <span class="tc">00:04</span>
+      <h2>Contacto</h2>
+    </div>
+    <p class="contact-text">¿Un proyecto en mente? Hablemos.</p>
+    <div class="contact-links">
+      <a href="mailto:tu-email@ejemplo.com">tu-email@ejemplo.com</a>
+      <a href="#">LinkedIn ↗</a>
+      <a href="#">Vimeo ↗</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span class="tc">END OF REEL</span>
+  <span>© 2026 Daniel Estor Fuentes</span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
