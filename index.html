@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia</title>
+<meta name="description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Waveform / playhead scroll indicator -->
+<div class="waveform-bar" aria-hidden="true">
+  <svg id="waveform-svg" viewBox="0 0 1000 40" preserveAspectRatio="none"></svg>
+  <div class="playhead" id="playhead"></div>
+</div>
+
+<nav class="nav">
+  <span class="nav-mark">D.E.F.</span>
+  <div class="nav-links">
+    <a href="#sobre-mi"><span class="tc">00:01</span>Sobre mí</a>
+    <a href="#proyectos"><span class="tc">00:02</span>Proyectos</a>
+    <a href="#skills"><span class="tc">00:03</span>Skills</a>
+    <a href="#contacto"><span class="tc">00:04</span>Contacto</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <span class="tc hero-tc">REC ● 02:02:19:85</span>
+    <h1>Daniel Estor Fuentes</h1>
+    <p class="hero-role">Técnico de sonido, productor musical y diseñador multimedia</p>
+    <p class="hero-tagline">Creador audiovisual especializado en sonido, vídeo y contenido interactivo.</p>
+    <a href="#sobre-mi" class="hero-cta">Ver el montaje <span aria-hidden="true">↓</span></a>
+  </section>
+
+  <!-- SOBRE MÍ -->
+  <section class="sobre-mi" id="sobre-mi">
+    <div class="section-head">
+      <span class="tc">00:01</span>
+      <h2>Sobre mí</h2>
+    </div>
+    <div class="bio-grid">
+      <!-- EDITA AQUÍ: texto de presentación (puedes añadir más párrafos <p class="bio-text">...</p>) -->
+      <div class="bio-text-group">
+        <p class="bio-text bio-text-lead">Soy Daniel Estor Fuentes, técnico de sonido, productor musical y diseñador multimedia.</p>
+        <p class="bio-text">
+          Máster en Diseño y Producción Multimedia por UNIR y grado en Producción de Música y Sonido para la Industria del Entretenimiento por ENTI–Universidad de Barcelona.
+        </p>
+        <p class="bio-text">
+          He trabajado como técnico de sonido en SGAE, Niñas del Mago (dúo de artistas de magia) y como técnico multimedia y realizador en RTV El Vendrell.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROYECTOS -->
+  <section class="proyectos" id="proyectos">
+    <div class="section-head">
+      <span class="tc">00:02</span>
+      <h2>Proyectos</h2>
+      <p class="section-desc">Dos pistas: música e imagen.</p>
+    </div>
+
+    <!-- BLOQUE A — MÚSICA -->
+    <div class="track-group-head">
+      <span class="tc">A</span>
+      <h3>Música y Sonido</h3>
+    </div>
+    <div class="track-list">
+
+      <!-- EDITA AQUÍ: A1 Producción -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A1</span>
+          <span class="track-tag">Producción</span>
+        </div>
+        <h3>Título del proyecto</h3>
+        <p>Describe aquí el proyecto de producción musical: contexto, herramientas usadas y resultado.</p>
+        <div class="track-wave" data-seed="1"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- EDITA AQUÍ: A2 Grabación -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A2</span>
+          <span class="track-tag">Grabación</span>
+        </div>
+        <h3>Título del proyecto</h3>
+        <p>Describe aquí el proyecto de grabación: sesión, equipo utilizado y resultado.</p>
+        <div class="track-wave" data-seed="2"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- A3 Composición -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A3</span>
+          <span class="track-tag">Composición</span>
+        </div>
+        <h3>Piezas propias</h3>
+        <p>Piezas propias de composición. Cada una incluye partitura o portada y reproductor de audio.</p>
+
+        <!-- EDITA AQUÍ: cada pieza va en un bloque .composition-piece — copia y pega este bloque para añadir más -->
+        <div class="composition-piece">
+          <img src="assets/img/variaciones-en-fm.png" alt="Partitura de Variaciones en Fm" class="composition-cover">
+          <div class="composition-info">
+            <h4>Variaciones en Fm</h4>
+            <p>Pieza minimalista para piano en Fm menor, con influencias de Philip Glass, Steve Reich y Hans Zimmer. Estructura de intro, variaciones progresivas que aceleran el ritmo hasta un clímax, coda y outro. 82 compases a 120 BPM.</p>
+            <audio controls src="assets/audio/variaciones-en-fm.mp3">
+              Tu navegador no soporta la reproducción de audio.
+            </audio>
+          </div>
+        </div>
+
+        <div class="composition-piece">
+          <img src="assets/img/musica-de-batalla.png" alt="Partitura orquestal de Música de batalla para videojuego" class="composition-cover">
+          <div class="composition-info">
+            <h4>Música de batalla para videojuego</h4>
+            <p>Composición orquestal para banda sonora de videojuego, escrita para orquesta completa (maderas, metales, timbales y cuerda). Progresión armónica que combina acordes diatónicos y adiatónicos para generar tensión dramática.</p>
+            <audio controls src="assets/audio/musica-de-batalla.mp3">
+              Tu navegador no soporta la reproducción de audio.
+            </audio>
+          </div>
+        </div>
+
+        <div class="track-footer">
+          <span class="track-note">Composición propia</span>
+        </div>
+      </article>
+
+      <!-- EDITA AQUÍ: A4 Mezcla -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A4</span>
+          <span class="track-tag">Mezcla</span>
+        </div>
+        <h3>Título del proyecto</h3>
+        <p>Describe aquí el proyecto de mezcla: número de pistas, enfoque y resultado.</p>
+        <div class="track-wave" data-seed="4"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- A5 Mastering — Transcripción SGAE -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A5</span>
+          <span class="track-tag">Mastering</span>
+        </div>
+        <h3>Transcripción SGAE</h3>
+        <p>Pipeline completo para registrar 12 cantos chamánicos: separación de stems (LALAL.AI), análisis de tono, generación MIDI silábica para voces con microtonalidad, y partitura final en MuseScore 4 vía Pro Tools.</p>
+        <div class="track-wave" data-seed="5"></div>
+        <div class="track-footer">
+          <span class="track-note">Pipeline técnico</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- EDITA AQUÍ: A6 DJ -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">A6</span>
+          <span class="track-tag">DJ</span>
+        </div>
+        <h3>Título del proyecto</h3>
+        <p>Describe aquí tu trabajo como DJ: sesiones, eventos y estilo.</p>
+        <div class="track-wave" data-seed="10"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- BLOQUE B — IMAGEN -->
+    <div class="track-group-head">
+      <span class="tc">B</span>
+      <h3>Imagen</h3>
+    </div>
+    <div class="track-list">
+
+      <!-- EDITA AQUÍ: B1 Web -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">B1</span>
+          <span class="track-tag">Web</span>
+        </div>
+        <h3>Título del proyecto</h3>
+        <p>Describe aquí el proyecto web: qué es, con qué lo hiciste y el resultado.</p>
+        <div class="track-wave" data-seed="6"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- B2 App — Boo Reader -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">B2</span>
+          <span class="track-tag">App</span>
+        </div>
+        <h3>Boo Reader</h3>
+        <p>App móvil de seguimiento de lectura desarrollada en Unity como Trabajo de Fin de Estudios, en equipo. Diseño de UI, lógica de progreso y validación en Play mode.</p>
+        <div class="track-wave" data-seed="7"></div>
+        <div class="track-footer">
+          <span class="track-note">Proyecto de equipo</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- B3 Interactivo — Pandemia: Feria de Abril -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">B3</span>
+          <span class="track-tag">Interactivo</span>
+        </div>
+        <h3>Pandemia: Feria de Abril</h3>
+        <p>Relato ramificado de 14 pasajes en Twine, con imágenes generadas por IA animadas en Runway Gen-4, montaje en CapCut y música original de Suno AI. Vídeo servido vía Vimeo, audio vía Cloudinary.</p>
+        <div class="track-wave" data-seed="8"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota: 10</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- EDITA AQUÍ: B4 Realización -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">B4</span>
+          <span class="track-tag">Realización</span>
+        </div>
+        <h3>Título del proyecto</h3>
+        <p>Describe aquí el proyecto de realización: contexto (por ejemplo, RTV El Vendrell), rol y resultado.</p>
+        <div class="track-wave" data-seed="9"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+      <!-- EDITA AQUÍ: B5 Marca personal -->
+      <article class="track">
+        <div class="track-meta">
+          <span class="tc">B5</span>
+          <span class="track-tag">Marca personal</span>
+        </div>
+        <h3>Raisen Soulz</h3>
+        <p>Describe aquí tu marca personal Raisen Soulz: qué es, en qué consiste y qué contenido incluye.</p>
+        <div class="track-wave" data-seed="11"></div>
+        <div class="track-footer">
+          <span class="track-note">Nota</span>
+          <a href="#" class="track-link">Ver proyecto →</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills" id="skills">
+    <div class="section-head">
+      <span class="tc">00:03</span>
+      <h2>Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.1</span>
+        <h3>Audio &amp; Sonido</h3>
+        <p>Pro Tools, Cubase, Logic, Reaper y Audacity.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.2</span>
+        <h3>Diseño Multimedia</h3>
+        <p>DaVinci Resolve, Edius, Maya, Adobe Suite, Canva y Genially.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.3</span>
+        <h3>Motores de Juego</h3>
+        <p>Unreal Engine 5 y Unity.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.4</span>
+        <h3>Middleware</h3>
+        <p>FMOD y Wwise.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.5</span>
+        <h3>Programación</h3>
+        <p>WebStorm, Node.js, Visual Studio Code, Figma y Twine.</p>
+      </div>
+      <div class="skill-channel">
+        <span class="tc channel-tc">CH.6</span>
+        <h3>Ofimática</h3>
+        <p>Word, Excel y Google Workspace.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contacto" id="contacto">
+    <div class="section-head">
+      <span class="tc">00:04</span>
+      <h2>Contacto</h2>
+    </div>
+    <p class="contact-text">¿Un proyecto en mente? Hablemos.</p>
+    <div class="contact-links">
+      <a href="mailto:destorfuentes@gmail.com">destorfuentes@gmail.com</a>
+      <a href="https://www.linkedin.com/in/daniel-estor-fuentes-3b16885b/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span class="tc">END OF REEL</span>
+  <span>© 2026 Daniel Estor Fuentes</span>
+</footer>
+
+<!-- Lightbox para ampliar imágenes -->
+<div class="lightbox-overlay" id="lightbox">
+  <span class="lightbox-close">✕ cerrar</span>
+  <img src="" alt="" id="lightbox-img">
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
