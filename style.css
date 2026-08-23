@@ -242,6 +242,12 @@ section { padding-top: 120px; }
   padding-top: 18px;
   border-top: 1px solid var(--line);
 }
+.composition-note {
+  flex-shrink: 0;
+  width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
 .composition-cover {
   width: 220px;
   aspect-ratio: 16 / 9;
@@ -306,7 +312,6 @@ section { padding-top: 120px; }
 }
 .composition-info .track-link {
   display: inline-block;
-  margin-top: 12px;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--accent-teal);
