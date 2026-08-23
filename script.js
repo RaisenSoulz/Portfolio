@@ -49,23 +49,39 @@ document.addEventListener('DOMContentLoaded', () => {
   initLightbox();
 });
 
-// Lightbox: clic en cualquier imagen con clase .composition-cover la abre en grande
+// Lightbox: clic en imágenes .composition-cover las abre en grande.
+// Si la miniatura tiene data-video, abre un reproductor de vídeo en su lugar.
 function initLightbox() {
   const overlay = document.getElementById('lightbox');
   const overlayImg = document.getElementById('lightbox-img');
-  if (!overlay || !overlayImg) return;
+  const overlayVideo = document.getElementById('lightbox-video');
+  if (!overlay || !overlayImg || !overlayVideo) return;
 
-  document.querySelectorAll('.composition-cover').forEach(img => {
-    img.addEventListener('click', () => {
-      overlayImg.src = img.src;
-      overlayImg.alt = img.alt;
-      overlay.classList.add('active');
+  document.querySelectorAll('.composition-cover').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const videoSrc = el.dataset.video;
+      if (videoSrc) {
+        overlayImg.style.display = 'none';
+        overlayVideo.style.display = 'block';
+        overlayVideo.src = videoSrc;
+        overlay.classList.add('active');
+        overlayVideo.play().catch(() => {});
+      } else {
+        overlayVideo.style.display = 'none';
+        overlayImg.style.display = 'block';
+        overlayImg.src = el.src;
+        overlayImg.alt = el.alt;
+        overlay.classList.add('active');
+      }
     });
   });
 
   function close() {
     overlay.classList.remove('active');
     overlayImg.src = '';
+    overlayVideo.pause();
+    overlayVideo.src = '';
   }
   overlay.addEventListener('click', close);
   document.addEventListener('keydown', (e) => {
