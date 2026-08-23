@@ -189,7 +189,7 @@ section { padding-top: 120px; }
   display: grid;
   grid-template-columns: 140px 1fr 200px;
   gap: 32px;
-  align-items: start;
+  align-items: baseline;
   transition: background 0.25s;
 }
 .track:last-child { border-bottom: 1px solid var(--line); }
