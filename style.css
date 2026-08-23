@@ -304,6 +304,18 @@ section { padding-top: 120px; }
   height: 36px;
   filter: invert(0.9) hue-rotate(180deg);
 }
+.composition-info .track-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-teal);
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.composition-info .track-link:hover {
+  border-color: var(--accent-teal);
+}
 @media (max-width: 640px) {
   .composition-piece { flex-direction: column; }
   .composition-cover { width: 100%; max-width: 320px; }
