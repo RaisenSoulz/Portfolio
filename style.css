@@ -199,7 +199,7 @@ section { padding-top: 120px; }
 .track-meta .tc { font-size: 1.05rem; letter-spacing: 0.06em; }
 .track-tag {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 1.05rem;
   color: var(--fg-faint);
   letter-spacing: 0.05em;
 }
