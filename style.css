@@ -176,7 +176,7 @@ section { padding-top: 120px; }
   color: var(--fg);
 }
 .track-group-head .tc {
-  font-size: 1rem;
+  font-size: 1.4rem;
   color: var(--accent-teal);
 }
 .track-list {
@@ -196,6 +196,7 @@ section { padding-top: 120px; }
 .track:hover { background: var(--bg-alt); }
 
 .track-meta { display: flex; flex-direction: column; gap: 8px; }
+.track-meta .tc { font-size: 1.05rem; letter-spacing: 0.06em; }
 .track-tag {
   font-family: var(--font-mono);
   font-size: 0.7rem;
@@ -276,12 +277,29 @@ section { padding-top: 120px; }
   overflow-y: auto;
 }
 .lightbox-overlay.active { display: flex; }
-.lightbox-overlay img {
+.lightbox-overlay img,
+.lightbox-overlay video {
   max-width: 100%;
   width: min(700px, 100%);
   height: auto;
   border: 1px solid var(--line);
   cursor: default;
+}
+.lightbox-overlay video { display: none; background: #000; }
+
+.video-thumb-wrap { position: relative; flex-shrink: 0; cursor: zoom-in; }
+.video-thumb-wrap .composition-cover { display: block; }
+.play-icon {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(18, 17, 16, 0.75);
+  color: var(--fg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  pointer-events: none;
 }
 .lightbox-close {
   position: absolute;
@@ -309,6 +327,17 @@ section { padding-top: 120px; }
   max-width: 420px;
   height: 36px;
   filter: invert(0.9) hue-rotate(180deg);
+}
+.foley-video {
+  grid-column: 2 / 3;
+  width: 100%;
+  max-width: 560px;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  background: #000;
+}
+@media (max-width: 860px) {
+  .foley-video { grid-column: 1; max-width: 100%; }
 }
 .composition-info .track-link {
   display: inline-block;
