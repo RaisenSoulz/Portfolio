@@ -47,7 +47,63 @@ document.addEventListener('DOMContentLoaded', () => {
   buildWaveform();
   initPlayhead();
   initLightbox();
+  initAccordions();
 });
+
+// Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic
+function initAccordions() {
+  document.querySelectorAll('.track-group-head').forEach(head => {
+    const list = head.nextElementSibling;
+    if (!list || !list.classList.contains('track-list')) return;
+
+    // Contador de subapartados junto al título
+    const count = list.querySelectorAll(':scope > article.track').length;
+    const h3 = head.querySelector('h3');
+    if (h3 && count) {
+      const span = document.createElement('span');
+      span.className = 'item-count';
+      span.textContent = `(${count})`;
+      h3.insertAdjacentElement('afterend', span);
+    }
+
+    function toggle() {
+      const isOpen = head.getAttribute('aria-expanded') === 'true';
+      if (isOpen) {
+        list.style.maxHeight = list.scrollHeight + 'px';
+        requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
+        head.setAttribute('aria-expanded', 'false');
+      } else {
+        head.setAttribute('aria-expanded', 'true');
+        list.style.maxHeight = list.scrollHeight + 'px';
+        // tras la transición, permitir crecer libremente si el contenido cambia (imágenes cargando)
+        list.addEventListener('transitionend', function onEnd() {
+          if (head.getAttribute('aria-expanded') === 'true') {
+            list.style.maxHeight = 'none';
+          }
+          list.removeEventListener('transitionend', onEnd);
+        });
+      }
+    }
+
+    head.addEventListener('click', () => {
+      // si estaba en 'none' (totalmente abierto), fijar altura actual antes de colapsar
+      if (list.style.maxHeight === 'none') {
+        list.style.maxHeight = list.scrollHeight + 'px';
+        requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
+        head.setAttribute('aria-expanded', 'false');
+        return;
+      }
+      toggle();
+    });
+
+    head.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        head.click();
+      }
+    });
+  });
+}
 
 // Lightbox: clic en imágenes .composition-cover las abre en grande.
 // Si la miniatura tiene data-video, abre un reproductor de vídeo en su lugar.
