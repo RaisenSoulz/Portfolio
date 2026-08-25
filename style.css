@@ -267,6 +267,11 @@ section { padding-top: 120px; }
   transition: opacity 0.2s;
 }
 .composition-cover:hover { opacity: 0.85; }
+.brand-logo {
+  object-fit: contain;
+  background: #f2ede4;
+  padding: 16px;
+}
 
 /* ---------- Lightbox ---------- */
 .lightbox-overlay {
