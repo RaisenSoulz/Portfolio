@@ -276,13 +276,21 @@ section { padding-top: 120px; }
 /* ---------- Galería en cuadrícula (todas visibles) ---------- */
 .gallery-row {
   grid-column: 1 / 4;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 220px);
+  justify-content: start;
   gap: 16px;
   padding: 18px 0 10px;
 }
 .gallery-thumb {
-  /* hereda el tamaño estándar de .composition-cover (220px, 16:9) */
+  width: 220px;
+}
+@media (max-width: 1000px) {
+  .gallery-row { grid-template-columns: repeat(2, 220px); }
+}
+@media (max-width: 540px) {
+  .gallery-row { grid-template-columns: 1fr; }
+  .gallery-thumb { width: 100%; }
 }
 
 /* ---------- Lightbox ---------- */
