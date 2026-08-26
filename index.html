@@ -1,575 +1,558 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia</title>
-<meta name="description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
+:root {
+  --bg: #121110;
+  --bg-alt: #1a1815;
+  --bg-raised: #201d19;
+  --fg: #f2ede4;
+  --fg-dim: #b8b2a4;
+  --fg-faint: #746e60;
+  --accent-amber: #e8a33d;
+  --accent-teal: #4bbdb7;
+  --accent-red: #c4453b;
+  --line: #34312b;
 
-<!-- Open Graph / vista previa al compartir -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://raisensoulz.github.io/Portfolio/">
-<meta property="og:title" content="Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia">
-<meta property="og:description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
-<meta property="og:image" content="https://raisensoulz.github.io/Portfolio/assets/img/og-preview.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:locale" content="es_ES">
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia">
-<meta name="twitter:description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
-<meta name="twitter:image" content="https://raisensoulz.github.io/Portfolio/assets/img/og-preview.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-<!-- Waveform / playhead scroll indicator -->
-<div class="waveform-bar" aria-hidden="true">
-  <svg id="waveform-svg" viewBox="0 0 1000 40" preserveAspectRatio="none"></svg>
-  <div class="playhead" id="playhead"></div>
-</div>
+html { scroll-behavior: smooth; }
 
-<nav class="nav">
-  <span class="nav-mark">D.E.F.</span>
-  <div class="nav-links">
-    <a href="#sobre-mi"><span class="tc">00:01</span>Sobre mí</a>
-    <a href="#proyectos"><span class="tc">00:02</span>Proyectos</a>
-    <a href="#skills"><span class="tc">00:03</span>Skills</a>
-    <a href="#contacto"><span class="tc">00:04</span>Contacto</a>
-  </div>
-</nav>
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
 
-<main>
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
 
-  <!-- HERO -->
-  <section class="hero" id="inicio">
-    <span class="tc hero-tc">REC ● 02:02:19:85</span>
-    <h1>Daniel Estor Fuentes</h1>
-    <p class="hero-role">Técnico de sonido, productor musical y diseñador multimedia</p>
-    <p class="hero-tagline">Creador audiovisual especializado en sonido, vídeo y contenido interactivo.</p>
-    <a href="#sobre-mi" class="hero-cta">Ver el montaje <span aria-hidden="true">↓</span></a>
-  </section>
+a { color: inherit; text-decoration: none; }
 
-  <!-- SOBRE MÍ -->
-  <section class="sobre-mi" id="sobre-mi">
-    <div class="section-head">
-      <span class="tc">00:01</span>
-      <h2>Sobre mí</h2>
-    </div>
-    <div class="bio-grid">
-      <!-- EDITA AQUÍ: texto de presentación (puedes añadir más párrafos <p class="bio-text">...</p>) -->
-      <div class="bio-text-group">
-        <p class="bio-text bio-text-lead">Soy Daniel Estor Fuentes, técnico de sonido, productor musical y diseñador multimedia.</p>
-        <p class="bio-text">
-          Máster en Diseño y Producción Multimedia por UNIR y grado en Producción de Música y Sonido para la Industria del Entretenimiento por ENTI–Universidad de Barcelona.
-        </p>
-        <p class="bio-text">
-          He trabajado como técnico de sonido en SGAE, Niñas del Mago (dúo de artistas de magia) y como técnico multimedia y realizador en RTV El Vendrell.
-        </p>
-        <p class="bio-text">
-          Creatividad, comunicación, trabajo en equipo, organización, resolución de problemas y aprendizaje continuo son los pilares con los que afronto cada proyecto.
-        </p>
-      </div>
-    </div>
-  </section>
+.tc {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--accent-amber);
+  display: inline-block;
+}
 
-  <!-- PROYECTOS -->
-  <section class="proyectos" id="proyectos">
-    <div class="section-head">
-      <span class="tc">00:02</span>
-      <h2>Proyectos</h2>
-      <p class="section-desc">Tres disciplinas diferentes.</p>
-    </div>
+/* ---------- Waveform scroll indicator ---------- */
+.waveform-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 40px;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--line);
+  z-index: 200;
+  overflow: hidden;
+}
+#waveform-svg { width: 100%; height: 100%; display: block; }
+.waveform-bar path { fill: none; stroke: var(--fg-faint); stroke-width: 1.2; }
+.playhead {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: var(--accent-red);
+  left: 0%;
+  box-shadow: 0 0 8px var(--accent-red);
+  transition: left 0.08s linear;
+}
 
-    <!-- BLOQUE A — MÚSICA -->
-    <div class="track-group-head" role="button" tabindex="0" aria-expanded="false">
-      <span class="tc">A</span>
-      <h3>Música y Sonido</h3>
-      <span class="toggle-icon" aria-hidden="true">▾</span>
-    </div>
-    <div class="track-list">
+/* ---------- Nav ---------- */
+.nav {
+  position: fixed;
+  top: 40px; left: 0; right: 0;
+  z-index: 190;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 6vw;
+  background: linear-gradient(to bottom, rgba(18,17,16,0.92), rgba(18,17,16,0));
+  pointer-events: none;
+}
+.nav > * { pointer-events: auto; }
+.nav-mark {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+}
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--fg-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--accent-amber); }
+.nav-links .tc { color: var(--fg-faint); }
+.nav-links a:hover .tc { color: var(--accent-amber); }
 
-<!-- A1 Composición -->
-      <article class="track" id="a1">
-        <div class="track-meta">
-          <span class="tc">A1</span>
-          <span class="track-tag">Composición</span>
-        </div>
-        <div class="track-detail">
-          <h3>Piezas propias</h3>
-        <p>Cada composición incluye partitura y reproductor de audio, escritas y maquetadas con MuseScore.</p>
+@media (max-width: 720px) {
+  .nav-links { display: none; }
+}
 
-        <!-- EDITA AQUÍ: cada pieza va en un bloque .composition-piece — copia y pega este bloque para añadir más -->
+/* ---------- Hero ---------- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 6vw;
+  padding-top: 40px;
+}
+.hero-tc {
+  color: var(--accent-red);
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+.hero-role {
+  font-family: var(--font-mono);
+  color: var(--accent-teal);
+  font-size: 1rem;
+  margin-top: 20px;
+  letter-spacing: 0.04em;
+}
+.hero-tagline {
+  color: var(--fg-dim);
+  max-width: 46ch;
+  font-size: 1.15rem;
+  margin-top: 16px;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .hero-tagline { white-space: normal; }
+}
+.hero-cta {
+  margin-top: 48px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--fg);
+  border: 1px solid var(--line);
+  padding: 12px 20px;
+  width: fit-content;
+  transition: border-color 0.2s, color 0.2s;
+}
+.hero-cta:hover { border-color: var(--accent-amber); color: var(--accent-amber); }
 
-<div class="composition-piece">
-          <img src="assets/img/variaciones-en-fm.png" alt="Partitura de Variaciones en Fm" class="composition-cover">
-          <div class="composition-info">
-            <h4>Variaciones en Fm</h4>
-            <p>Fue la primera vez que me metí de lleno en el minimalismo (Philip Glass, Steve Reich, Hans Zimmer) sin tener muy claro si iba a salir bien parado. Terminé con algún paralelismo de más entre voces que no debería tener, pero es la primera composición mía que realmente me hizo sentir algo al escucharla — y eso me quedo.</p>
-            <audio controls src="assets/audio/variaciones-en-fm.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
+/* ---------- Section head (shared) ---------- */
+.section-head { padding: 0 6vw; margin-bottom: 48px; }
+.section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-top: 8px;
+}
+.section-desc { color: var(--fg-dim); margin-top: 10px; }
 
-        <div class="composition-piece">
-          <img src="assets/img/musica-de-batalla.png" alt="Partitura orquestal de Música de batalla para videojuego" class="composition-cover">
-          <div class="composition-info">
-            <h4>Música de batalla para videojuego</h4>
-            <p>Composición orquestal para banda sonora de videojuego, escrita para orquesta completa (maderas, metales, timbales y cuerda). Progresión armónica que combina acordes diatónicos y adiatónicos para generar tensión dramática.</p>
-            <audio controls src="assets/audio/musica-de-batalla.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
+section { padding-top: 120px; }
 
-        <div class="composition-piece">
-          <img src="assets/img/musica-de-exploracion.png" alt="Partitura de Música de exploración para videojuego" class="composition-cover">
-          <div class="composition-info">
-            <h4>Música de exploración para videojuego</h4>
-            <p>Composición para flauta, clarinete en Si♭ y piano, pensada como música de exploración de gameplay. Textura ligera y melódica que acompaña el ritmo pausado de la exploración.</p>
-            <audio controls src="assets/audio/musica-de-exploracion.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-          <div class="composition-note">
-            <a href="https://youtu.be/Lg4gIaTI5-c" class="track-link" target="_blank" rel="noopener">Ver en YouTube ↗</a>
-          </div>
-        </div>
+/* ---------- Proyectos / tracks ---------- */
+.track-group-head {
+  padding: 40px 6vw 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.track-group-head:hover { background: var(--bg-alt); }
+.track-group-head h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: var(--fg);
+}
+.track-group-head .tc {
+  font-size: 1.4rem;
+  color: var(--accent-teal);
+}
+.track-group-head .toggle-icon {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  color: var(--fg-faint);
+  font-size: 1.1rem;
+  transition: transform 0.3s;
+}
+.item-count {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--fg-faint);
+}
+.track-group-head[aria-expanded="true"] .toggle-icon {
+  transform: rotate(180deg);
+}
+.track-list {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease;
+}
+.track {
+  border-top: 1px solid var(--line);
+  padding: 0 6vw;
+  transition: background 0.25s;
+}
+.track:last-child { border-bottom: 1px solid var(--line); }
+.track:hover { background: var(--bg-alt); }
+.track.has-detail { cursor: pointer; }
 
-        <div class="composition-piece">
-          <img src="assets/img/musica-de-cinematica.png" alt="Partitura de Música de cinemática para videojuego" class="composition-cover">
-          <div class="composition-info">
-            <h4>Música de cinemática para videojuego</h4>
-            <p>Composición para cinemática. Progresión armónica en Do♯ menor con acordes de paso adiatónicos que aportan tensión dramática a la escena.</p>
-            <audio controls src="assets/audio/musica-de-cinematica.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-          <div class="composition-note">
-            <a href="https://www.youtube.com/watch?v=PB4MI5a6qKU" class="track-link" target="_blank" rel="noopener">Ver en YouTube ↗</a>
-          </div>
-        </div>
+.track-detail {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease;
+}
+.track-detail > *:last-child {
+  margin-bottom: 40px;
+}
+.track-meta[role="button"] { cursor: pointer; }
+.track-toggle-icon {
+  display: inline-block;
+  margin-left: 10px;
+  font-family: var(--font-mono);
+  color: var(--fg-faint);
+  font-size: 0.85rem;
+  transition: transform 0.3s;
+}
+.track-meta[aria-expanded="true"] .track-toggle-icon {
+  transform: rotate(180deg);
+}
+.track-meta[role="button"]:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 3px;
+}
 
-        <div class="composition-piece">
-          <img src="assets/img/no-time-to-die.png" alt="Partitura del arreglo No time to die para cuarteto de cuerda y piano" class="composition-cover">
-          <div class="composition-info">
-            <h4>Arreglo del tema: No time to cry</h4>
-            <p>Arreglo para cuarteto de cuerda (violín, viola, violonchelo y contrabajo) y piano de "No Time to Die". Reescritura instrumental de una obra existente, adaptada para formación de cámara.</p>
-            <audio controls src="assets/audio/no-time-to-die.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
-        </div>
-      </article>
-      
+.track-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 12px;
+  padding: 20px 0;
+}
+.track-meta .tc { font-size: 1.05rem; letter-spacing: 0.06em; }
+.track-tag {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  color: var(--fg-faint);
+  letter-spacing: 0.05em;
+}
+.track h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.track p { color: var(--fg-dim); font-size: 0.95rem; max-width: 60ch; }
 
-      <!-- A2 Edición de partituras -->
-      <article class="track" id="a2">
-        <div class="track-meta">
-          <span class="tc">A2</span>
-          <span class="track-tag">Edición de partituras</span>
-        </div>
-        <div class="track-detail">
-          <h3>Maquetación</h3>
-          <p>Transcripción de partituras para editoriales ya sea con MuseScore, Finale, Sibelius o Dorico.</p>
+.track-wave {
+  grid-column: 2 / 3;
+  height: 36px;
+  margin-top: 18px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--accent-teal) 0px, var(--accent-teal) 2px,
+    transparent 2px, transparent 6px
+  );
+  -webkit-mask-image: linear-gradient(90deg, black, black);
+  opacity: 0.55;
+  clip-path: polygon(0 50%, 2% 20%, 4% 80%, 6% 35%, 8% 65%, 10% 15%, 12% 85%, 14% 40%, 16% 60%, 18% 25%, 20% 75%, 22% 45%, 24% 55%, 26% 30%, 28% 70%, 30% 20%, 32% 80%, 34% 40%, 36% 60%, 38% 30%, 40% 70%, 42% 45%, 44% 55%, 46% 25%, 48% 75%, 50% 40%, 52% 60%, 54% 20%, 56% 80%, 58% 35%, 60% 65%, 62% 45%, 64% 55%, 66% 30%, 68% 70%, 70% 40%, 72% 60%, 74% 25%, 76% 75%, 78% 45%, 80% 55%, 82% 35%, 84% 65%, 86% 40%, 88% 60%, 90% 30%, 92% 70%, 94% 45%, 96% 55%, 98% 40%, 100% 50%);
+}
 
-<div class="composition-piece composition-piece--single">
-          <img src="assets/img/edicion-mozart-sinfonia29.png" alt="Edición de partitura de la Sinfonía n.º 29 de Mozart" class="composition-cover">
-          <div class="composition-info">
-            <h4>K.201 — Allegro moderato</h4>
-            <p>Edición y grabado del primer movimiento de la Sinfonía n.º 29 de Mozart, para orquesta de cámara (oboes, trompas en La, violín I y II, viola, violonchelo y contrabajo).</p>
-          </div>
-        </div>
-        </div>
-      </article>
-      
+.track-footer {
+  grid-column: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
 
-      <!-- A3 Diseño de sonido -->
-      <article class="track" id="a3">
-        <div class="track-meta">
-          <span class="tc">A3</span>
-          <span class="track-tag">Diseño de sonido</span>
-        </div>
-        <div class="track-detail">
-          <h3>Síntesis</h3>
-        <p>Diseño de sonido realizado con los sintetizadores Voltage Modular y Serum.</p>
+/* ---------- Composition pieces (imagen + audio) ---------- */
+.composition-piece {
+  grid-column: 1 / 4;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.composition-piece--single {
+  /* mantiene el mismo separador que el resto de piezas */
+}
+.composition-note {
+  flex-shrink: 0;
+  width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
+.composition-cover {
+  width: 220px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 2px;
+  border: 1px solid var(--line);
+  background: var(--bg-alt);
+  flex-shrink: 0;
+  cursor: zoom-in;
+  transition: opacity 0.2s;
+}
+.composition-cover:hover { opacity: 0.85; }
+.brand-logo {
+  object-fit: contain;
+  background: #f2ede4;
+  padding: 16px;
+}
 
-<div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/diseno-sonido-daniel-estor.png" alt="Vídeo de diseño de sonido con Voltage Modular" class="composition-cover video-thumb" data-video="assets/video/diseno-sonido-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Recreación de la banda sonora de Super Mario Bros.</h4>
-            <p>Sonidos sincronizados a la imagen, creados desde cero con síntesis.</p>
-          </div>
-        </div>
+/* ---------- Galería en cuadrícula (todas visibles) ---------- */
+.gallery-row {
+  grid-column: 1 / 4;
+  display: grid;
+  grid-template-columns: repeat(4, 220px);
+  justify-content: start;
+  gap: 16px;
+  padding: 18px 0 10px;
+}
+.gallery-thumb {
+  width: 220px;
+}
+@media (max-width: 1000px) {
+  .gallery-row { grid-template-columns: repeat(2, 220px); }
+}
+@media (max-width: 540px) {
+  .gallery-row { grid-template-columns: 1fr; }
+  .gallery-thumb { width: 100%; }
+}
 
-        <div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/diseno-sonido-videojuegos-daniel-estor.png" alt="Vídeo de diseño de sonido para gameplay de disparos" class="composition-cover video-thumb" data-video="assets/video/diseno-sonido-videojuegos-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Diseño de sonido para gameplay</h4>
-            <p>Efectos de disparo, impacto y ambiente creados y sincronizados a una secuencia de gameplay en primera persona.</p>
-          </div>
-        </div>
-        </div>
-      </article>
-      
+/* ---------- Lightbox ---------- */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 9, 8, 0.92);
+  display: none;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 500;
+  cursor: zoom-out;
+  padding: 60px 40px;
+  overflow-y: auto;
+}
+.lightbox-overlay.active { display: flex; }
+.lightbox-overlay img,
+.lightbox-overlay video {
+  max-width: 100%;
+  width: min(700px, 100%);
+  height: auto;
+  border: 1px solid var(--line);
+  cursor: default;
+}
+.lightbox-overlay video { display: none; background: #000; }
 
-      <!-- A4 Foley -->
-      <article class="track" id="a4">
-        <div class="track-meta">
-          <span class="tc">A4</span>
-          <span class="track-tag">Foley</span>
-        </div>
-        <div class="track-detail">
-          <h3>Foley</h3>
-          <p>El Foley es una técnica de postproducción de sonido que consiste en recrear y grabar manualmente efectos sonoros para sincronizarlos con los frames de la imagen.</p>
+.video-thumb-wrap { position: relative; flex-shrink: 0; cursor: zoom-in; }
+.video-thumb-wrap .composition-cover { display: block; }
+.play-icon {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(18, 17, 16, 0.75);
+  color: var(--fg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+.lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--fg-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+.lightbox-close:hover { color: var(--fg); }
+.lightbox-close:focus-visible,
+.composition-cover:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
+}
+.composition-info { flex: 1; min-width: 0; }
+.composition-info h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+.composition-info p {
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+}
+.composition-info audio {
+  width: 100%;
+  max-width: 420px;
+  height: 36px;
+  filter: invert(0.9) hue-rotate(180deg);
+}
+.foley-video {
+  grid-column: 2 / 3;
+  width: 100%;
+  max-width: 560px;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  background: #000;
+}
+@media (max-width: 860px) {
+  .foley-video { grid-column: 1; max-width: 100%; }
+}
+.composition-info .track-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-teal);
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.composition-info .track-link:hover {
+  border-color: var(--accent-teal);
+}
+@media (max-width: 640px) {
+  .composition-piece { flex-direction: column; }
+  .composition-cover { width: 100%; max-width: 320px; }
+}
+.track-note {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-amber);
+}
+.track-link {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--fg-dim);
+  transition: color 0.2s;
+}
+.track:hover .track-link { color: var(--accent-teal); }
 
-<div class="composition-piece composition-piece--single">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/foley-daniel-estor.png" alt="Vídeo del ejercicio de foley" class="composition-cover video-thumb" data-video="assets/video/foley-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <p>Grabación de efectos de sonido propios (pasos, ropa, objetos) sincronizados y ajustados al fotograma de una escena de referencia.</p>
-          </div>
-        </div>
-        </div>
-      </article>
-      
+@media (max-width: 860px) {
+  .track { grid-template-columns: 1fr; }
+  .track-wave { grid-column: 1; }
+  .track-footer { grid-column: 1; align-items: flex-start; flex-direction: row; justify-content: space-between; }
+}
 
-      <!-- A5 Film Scoring -->
-      <article class="track" id="a5">
-        <div class="track-meta">
-          <span class="tc">A5</span>
-          <span class="track-tag">Film Scoring</span>
-        </div>
-        <div class="track-detail">
-          <h3>Bandas sonoras</h3>
-        <p>El Film Scoring es el arte de crear música original para cine, televisión o videojuegos, realzando la narrativa y guiando las emociones del espectador.</p>
+/* ---------- Sobre mí ---------- */
+.bio-grid {
+  padding: 0 6vw 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.bio-text-group { display: flex; flex-direction: column; gap: 10px; }
+.bio-text { font-size: 1.1rem; color: var(--fg-dim); max-width: 62ch; }
+.bio-text-lead { font-size: clamp(0.85rem, 1.65vw, 1.1rem); white-space: nowrap; max-width: none; }
+@media (max-width: 700px) {
+  .bio-text-lead { white-space: normal; font-size: 1.1rem; }
+}
+.bio-facts {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.bio-facts li { color: var(--fg); font-size: 0.95rem; }
+.bio-facts .tc { display: block; margin-bottom: 6px; color: var(--fg-faint); }
 
-<div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/musica-comedia-daniel-estor.png" alt="Vídeo de música para animación de comedia" class="composition-cover video-thumb" data-video="assets/video/musica-comedia-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Música para animación de comedia</h4>
-            <p>Composición musical para una escena de animación de tono cómico, sincronizada al ritmo y los gags visuales de la imagen.</p>
-          </div>
-        </div>
+/* ---------- Skills ---------- */
+.skills-grid {
+  padding: 0 6vw 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.skill-channel {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 28px 22px;
+}
+.channel-tc { color: var(--accent-teal); margin-bottom: 14px; }
+.skill-channel h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+.skill-channel p { color: var(--fg-dim); font-size: 0.88rem; }
 
-        <div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/gameplay-zelda-daniel-estor.png" alt="Gameplay recreando The Legend of Zelda con música y foley propios" class="composition-cover video-thumb" data-video="assets/video/gameplay-zelda-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Gameplay: recreación de Zelda</h4>
-            <p>Reconstruir de cero el sonido de Zelda —música, pasos, menús, cada golpe de espada— y que encajara en cada sección sin que sonara a "versión casera" fue lo más ambicioso que he encarado hasta ahora.</p>
-          </div>
-        </div>
-        </div>
-      </article>
-      
+@media (max-width: 900px) {
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 540px) {
+  .skills-grid { grid-template-columns: 1fr; }
+}
 
-      <!-- A6 Grabación -->
-      <article class="track" id="a6">
-        <div class="track-meta">
-          <span class="tc">A6</span>
-          <span class="track-tag">Grabación</span>
-        </div>
-        <div class="track-detail">
-          <h3>Sesiones de grabación en directo</h3>
-        <p>Grabaciones realizadas en la Sala Mompou de SGAE Barcelona, donde he tenido la oportunidad de grabar a grupos como Blaumut, Laietana, Los Coming Soon, Berta Garrido y prácticamente a diario audiciones de cámara.</p>
+/* ---------- Contacto ---------- */
+.contacto { padding-bottom: 140px; }
+.contact-text {
+  padding: 0 6vw;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: var(--fg-dim);
+  margin-bottom: 32px;
+}
+.contact-links {
+  padding: 0 6vw;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+.contact-links a {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 4px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.contact-links a:hover { color: var(--accent-amber); border-color: var(--accent-amber); }
+.cv-download {
+  border: 1px solid var(--accent-teal) !important;
+  color: var(--accent-teal);
+  padding: 10px 18px !important;
+}
+.cv-download:hover {
+  background: var(--accent-teal);
+  color: var(--bg) !important;
+  border-color: var(--accent-teal) !important;
+}
 
-<div class="gallery-row">
-          <!-- EDITA AQUÍ: cada foto es una <img class="composition-cover gallery-thumb">, copia y pega para añadir más -->
-          <img src="assets/img/grabacion/percusion-piano-escenario.jpg" alt="Percusión latina y piano en el escenario" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/bateria-microfonia.jpg" alt="Batería con microfonía de grabación" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/piano-cola-microfonia.jpg" alt="Piano de cola con microfonía de grabación" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/escenario-piano-bateria.jpg" alt="Escenario con piano de cola y batería preparados para grabar" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/consola-yamaha-dm2000.jpg" alt="Mesa de mezclas Yamaha DM2000" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/patch-bay-tie-lines.jpg" alt="Patch bay con líneas de conexión de la sala" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/rack-preamps.jpg" alt="Rack de previos de micrófono Avalon y Focusrite" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/multiviewer-camaras.jpg" alt="Multivisor con las cámaras de la sesión de grabación" class="composition-cover gallery-thumb">
-        </div>
-        </div>
-      </article>
-      
-
-      <!-- EDITA AQUÍ: A7 Producción -->
-      <article class="track" id="a7">
-        <div class="track-meta">
-          <span class="tc">A7</span>
-          <span class="track-tag">Producción</span>
-        </div>
-        <div class="track-detail">
-          <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto de producción musical: contexto, herramientas usadas y resultado.</p>
-        </div>
-      </article>
-      
-
-<!-- A8 Mezcla y Mastering — Transcripción SGAE -->
-      <article class="track" id="a8">
-        <div class="track-meta">
-          <span class="tc">A8</span>
-          <span class="track-tag">Mezcla y Mastering</span>
-        </div>
-        <div class="track-detail">
-          <h3>Volúmenes, panorama, decibelios y LUFS</h3>
-        <p>Trabajos de mezcla y mastering sobre producciones profesionales a partir de las pistas originales.</p>
-
-<div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/there-eyes-mezcla.png" alt="Vídeo de la mezcla de There Eyes" class="composition-cover video-thumb" data-video="assets/video/there-eyes-mezcla.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>There Eyes (Mezcla creativa)</h4>
-            <p>A partir de las pistas originales de la grabación se realizó esta mezcla.</p>
-          </div>
-        </div>
-
-        <div class="composition-piece">
-          <img src="assets/img/mastering-daniel-estor.png" alt="Sesión de mastering en Pro Tools con Oxford Inflator, OTT y Maxim" class="composition-cover">
-          <div class="composition-info">
-            <h4>Mastering</h4>
-            <p>Proceso de mastering final sobre mezcla propia.</p>
-            <audio controls src="assets/audio/mastering-daniel-estor.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
-        </div>
-      </article>
-      
-
-      <!-- EDITA AQUÍ: A9 DJ -->
-      <article class="track" id="a9">
-        <div class="track-meta">
-          <span class="tc">A9</span>
-          <span class="track-tag">DJ</span>
-        </div>
-        <div class="track-detail">
-          <h3>Título del proyecto</h3>
-        <p>Describe aquí tu trabajo como DJ: sesiones, eventos y estilo.</p>
-        </div>
-      </article>
-      
-
-    </div>
-
-    <!-- BLOQUE B — IMAGEN -->
-    <div class="track-group-head" role="button" tabindex="0" aria-expanded="false">
-      <span class="tc">B</span>
-      <h3>Imagen</h3>
-      <span class="toggle-icon" aria-hidden="true">▾</span>
-    </div>
-    <div class="track-list">
-
-      <!-- EDITA AQUÍ: B1 Portadas corporativas -->
-      <article class="track" id="b1">
-        <div class="track-meta">
-          <span class="tc">B1</span>
-          <span class="track-tag">Portadas corporativas</span>
-        </div>
-        <div class="track-detail">
-          <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto de portadas corporativas: para quién, herramientas y resultado.</p>
-        </div>
-      </article>
-      
-
-      <!-- B2 Marca personal -->
-      <article class="track" id="b2">
-        <div class="track-meta">
-          <span class="tc">B2</span>
-          <span class="track-tag">Marca personal</span>
-        </div>
-        <div class="track-detail">
-          <h3>Raisen Soulz</h3>
-        <p>Identidad visual de mi proyecto personal como productor de géneros musicales contundentes como Hardstyle y Raw.</p>
-
-<div class="composition-piece composition-piece--single">
-          <img src="assets/img/raisen-soulz-logo.png" alt="Logo de Raisen Soulz" class="composition-cover brand-logo">
-          <div class="composition-info">
-            <h4>Logotipo</h4>
-            <p>Diseño de marca para Raisen Soulz, mi alias como productor musical.</p>
-          </div>
-        </div>
-        </div>
-      </article>
-      
-
-    </div>
-
-    <!-- BLOQUE C — MULTIMEDIA -->
-    <div class="track-group-head" role="button" tabindex="0" aria-expanded="false">
-      <span class="tc">C</span>
-      <h3>Multimedia</h3>
-      <span class="toggle-icon" aria-hidden="true">▾</span>
-    </div>
-    <div class="track-list">
-
-      <!-- C1 Interactivo — Pandemia: Feria de Abril -->
-      <article class="track" id="c1">
-        <div class="track-meta">
-          <span class="tc">C1</span>
-          <span class="track-tag">Interactivo</span>
-        </div>
-        <div class="track-detail">
-          <h3>Pandemia: Feria de Abril</h3>
-        <p>Relato ramificado de 14 pasajes en Twine, con imágenes generadas por IA animadas en Runway Gen-4, montaje en CapCut y música original de Suno AI. Vídeo servido vía Vimeo, audio vía Cloudinary.</p>
-        </div>
-      </article>
-      
-
-      <!-- EDITA AQUÍ: C2 Web -->
-      <article class="track" id="c2">
-        <div class="track-meta">
-          <span class="tc">C2</span>
-          <span class="track-tag">Web</span>
-        </div>
-        <div class="track-detail">
-          <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto web: qué es, con qué lo hiciste y el resultado.</p>
-        </div>
-      </article>
-      
-
-      <!-- C3 App — Boo Reader -->
-      <article class="track" id="c3">
-        <div class="track-meta">
-          <span class="tc">C3</span>
-          <span class="track-tag">App</span>
-        </div>
-        <div class="track-detail">
-          <h3>Boo Reader</h3>
-        <p>App móvil de seguimiento de lectura desarrollada en Unity como Trabajo de Fin de Estudios, en equipo. Diseño de UI, lógica de progreso y validación en Play mode.</p>
-        </div>
-      </article>
-      
-
-      <!-- EDITA AQUÍ: C4 Realización -->
-      <article class="track" id="c4">
-        <div class="track-meta">
-          <span class="tc">C4</span>
-          <span class="track-tag">Realización</span>
-        </div>
-        <div class="track-detail">
-          <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto de realización: contexto (por ejemplo, RTV El Vendrell), rol y resultado.</p>
-        </div>
-      </article>
-      
-
-      <!-- C5 Locución -->
-      <article class="track" id="c5">
-        <div class="track-meta">
-          <span class="tc">C5</span>
-          <span class="track-tag">Locución</span>
-        </div>
-        <div class="track-detail">
-          <h3>Radiodifusión</h3>
-        <p>Grabación de locución en cabina de radio profesional en los estudios de A3 Media en Madrid.</p>
-
-<div class="composition-piece composition-piece--single">
-          <img src="assets/img/locucion-cabina.jpg" alt="Cabina de locución de radio" class="composition-cover">
-          <div class="composition-info">
-            <h4>Demo de locución</h4>
-            <p>Prácticas realizadas dentro del certificado de La Radio Musical de AtresMedia Formación.</p>
-            <audio controls src="assets/audio/demo-locucion.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
-        </div>
-      </article>
-      
-
-    </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section class="skills" id="skills">
-    <div class="section-head">
-      <span class="tc">00:03</span>
-      <h2>Skills</h2>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.1</span>
-        <h3>Audio &amp; Sonido</h3>
-        <p>Pro Tools, Cubase, Logic, Reaper y Audacity.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.2</span>
-        <h3>Diseño Multimedia</h3>
-        <p>DaVinci Resolve, Edius, Maya, Adobe Suite, Canva y Genially.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.3</span>
-        <h3>Motores de Juego</h3>
-        <p>Unreal Engine 5 y Unity.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.4</span>
-        <h3>Middleware</h3>
-        <p>FMOD y Wwise.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.5</span>
-        <h3>Programación</h3>
-        <p>WebStorm, Node.js, Visual Studio Code, Figma y Twine.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.6</span>
-        <h3>Ofimática</h3>
-        <p>Word, Excel y Google Workspace.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section class="contacto" id="contacto">
-    <div class="section-head">
-      <span class="tc">00:04</span>
-      <h2>Contacto</h2>
-    </div>
-    <p class="contact-text">¿Un proyecto en mente? Hablemos.</p>
-    <div class="contact-links">
-      <a href="mailto:destorfuentes@gmail.com">destorfuentes@gmail.com</a>
-      <a href="https://www.linkedin.com/in/daniel-estor-fuentes-3b16885b/" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="assets/docs/cv-daniel-estor-fuentes.pdf" download class="cv-download">Descargar CV ↓</a>
-    </div>
-  </section>
-
-</main>
-
-<footer class="footer">
-  <span class="tc">END OF REEL</span>
-  <span>© 2026 Daniel Estor Fuentes</span>
-</footer>
-
-<!-- Lightbox para ampliar imágenes -->
-<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Vista ampliada">
-  <button type="button" class="lightbox-close" id="lightbox-close-btn">✕ cerrar</button>
-  <img src="" alt="" id="lightbox-img">
-  <video id="lightbox-video" controls playsinline></video>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
+/* ---------- Footer ---------- */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 24px 6vw;
+  display: flex;
+  justify-content: space-between;
+  color: var(--fg-faint);
+  font-size: 0.8rem;
+}
