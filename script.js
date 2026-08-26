@@ -43,6 +43,28 @@ function initPlayhead() {
   window.addEventListener('resize', update);
 }
 
+// Recuerda qué bloques (A/B/C) están abiertos mientras se navega por la pestaña
+// (se resetea si se cierra el navegador, para que cada visita empiece limpia)
+const ACCORDION_STORAGE_KEY = 'proyectos-bloques-abiertos';
+
+function getOpenBlocksState() {
+  try {
+    return JSON.parse(sessionStorage.getItem(ACCORDION_STORAGE_KEY)) || {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function setBlockOpenState(letter, isOpen) {
+  try {
+    const state = getOpenBlocksState();
+    state[letter] = isOpen;
+    sessionStorage.setItem(ACCORDION_STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    // sessionStorage no disponible (modo privado, etc.) — se ignora sin romper la web
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildWaveform();
   initPlayhead();
@@ -83,6 +105,9 @@ function initDeepLink() {
     }
 
     head.setAttribute('aria-expanded', 'true');
+    const letterEl = head.querySelector('.tc');
+    if (letterEl) setBlockOpenState(letterEl.textContent.trim(), true);
+
     if (animate) {
       list.style.maxHeight = list.scrollHeight + 'px';
       list.addEventListener('transitionend', function onEnd() {
@@ -101,11 +126,17 @@ function initDeepLink() {
   window.addEventListener('hashchange', () => openTargetFromHash(true));
 }
 
-// Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic
+// Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic.
+// Recuerda el estado abierto/cerrado durante la sesión de navegación.
 function initAccordions() {
+  const savedState = getOpenBlocksState();
+
   document.querySelectorAll('.track-group-head').forEach(head => {
     const list = head.nextElementSibling;
     if (!list || !list.classList.contains('track-list')) return;
+
+    const letterEl = head.querySelector('.tc');
+    const letter = letterEl ? letterEl.textContent.trim() : null;
 
     // Contador de subapartados junto al título
     const count = list.querySelectorAll(':scope > article.track').length;
@@ -117,12 +148,19 @@ function initAccordions() {
       h3.insertAdjacentElement('afterend', span);
     }
 
+    // Restaurar estado guardado de esta sesión de navegación (sin animación)
+    if (letter && savedState[letter]) {
+      head.setAttribute('aria-expanded', 'true');
+      list.style.maxHeight = 'none';
+    }
+
     function toggle() {
       const isOpen = head.getAttribute('aria-expanded') === 'true';
       if (isOpen) {
         list.style.maxHeight = list.scrollHeight + 'px';
         requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
         head.setAttribute('aria-expanded', 'false');
+        if (letter) setBlockOpenState(letter, false);
       } else {
         head.setAttribute('aria-expanded', 'true');
         list.style.maxHeight = list.scrollHeight + 'px';
@@ -133,6 +171,7 @@ function initAccordions() {
           }
           list.removeEventListener('transitionend', onEnd);
         });
+        if (letter) setBlockOpenState(letter, true);
       }
     }
 
@@ -142,6 +181,7 @@ function initAccordions() {
         list.style.maxHeight = list.scrollHeight + 'px';
         requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
         head.setAttribute('aria-expanded', 'false');
+        if (letter) setBlockOpenState(letter, false);
         return;
       }
       toggle();
