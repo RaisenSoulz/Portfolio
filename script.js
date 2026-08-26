@@ -48,7 +48,58 @@ document.addEventListener('DOMContentLoaded', () => {
   initPlayhead();
   initLightbox();
   initAccordions();
+  initDeepLink();
 });
+
+// Deep-linking: si la URL trae un #ancla que apunta a una pieza dentro de un
+// bloque colapsado (A/B/C), lo abre automáticamente y hace scroll hasta ella.
+function initDeepLink() {
+  function openTargetFromHash(animate) {
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) return;
+    let target;
+    try {
+      target = document.querySelector(hash);
+    } catch (e) {
+      return; // hash no válido como selector
+    }
+    if (!target) return;
+
+    const list = target.closest('.track-list');
+    if (!list) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    const head = list.previousElementSibling;
+    if (!head || !head.classList.contains('track-group-head')) return;
+
+    function doScroll() {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    if (head.getAttribute('aria-expanded') === 'true') {
+      doScroll();
+      return;
+    }
+
+    head.setAttribute('aria-expanded', 'true');
+    if (animate) {
+      list.style.maxHeight = list.scrollHeight + 'px';
+      list.addEventListener('transitionend', function onEnd() {
+        list.style.maxHeight = 'none';
+        list.removeEventListener('transitionend', onEnd);
+        doScroll();
+      });
+    } else {
+      // Carga inicial de la página: abrir sin animación y desplazar directamente
+      list.style.maxHeight = 'none';
+      doScroll();
+    }
+  }
+
+  openTargetFromHash(false);
+  window.addEventListener('hashchange', () => openTargetFromHash(true));
+}
 
 // Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic
 function initAccordions() {
