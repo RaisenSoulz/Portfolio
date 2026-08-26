@@ -360,6 +360,16 @@ section { padding-top: 120px; }
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--fg-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+.lightbox-close:hover { color: var(--fg); }
+.lightbox-close:focus-visible,
+.composition-cover:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
 }
 .composition-info { flex: 1; min-width: 0; }
 .composition-info h4 {
