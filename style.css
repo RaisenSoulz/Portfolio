@@ -207,11 +207,7 @@ section { padding-top: 120px; }
 }
 .track {
   border-top: 1px solid var(--line);
-  padding: 40px 6vw;
-  display: grid;
-  grid-template-columns: 140px 1fr 200px;
-  gap: 32px;
-  align-items: baseline;
+  padding: 0 6vw;
   transition: background 0.25s;
 }
 .track:last-child { border-bottom: 1px solid var(--line); }
@@ -219,15 +215,17 @@ section { padding-top: 120px; }
 .track.has-detail { cursor: pointer; }
 
 .track-detail {
-  grid-column: 1 / 4;
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.4s ease;
 }
+.track-detail > *:last-child {
+  margin-bottom: 40px;
+}
 .track-meta[role="button"] { cursor: pointer; }
 .track-toggle-icon {
   display: inline-block;
-  margin-left: 8px;
+  margin-left: 10px;
   font-family: var(--font-mono);
   color: var(--fg-faint);
   font-size: 0.85rem;
@@ -241,7 +239,13 @@ section { padding-top: 120px; }
   outline-offset: 3px;
 }
 
-.track-meta { display: flex; flex-direction: column; gap: 8px; }
+.track-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 12px;
+  padding: 20px 0;
+}
 .track-meta .tc { font-size: 1.05rem; letter-spacing: 0.06em; }
 .track-tag {
   font-family: var(--font-mono);
