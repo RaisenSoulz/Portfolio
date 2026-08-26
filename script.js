@@ -1,535 +1,359 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia</title>
-<meta name="description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
+// Genera la waveform superior una sola vez (determinista, no random en cada carga
+// para que sea estable, pero con aspecto de audio real)
+function buildWaveform() {
+  const svg = document.getElementById('waveform-svg');
+  const points = 220;
+  const width = 1000;
+  const height = 40;
+  const mid = height / 2;
 
-<!-- Open Graph / vista previa al compartir -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://raisensoulz.github.io/Portfolio/">
-<meta property="og:title" content="Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia">
-<meta property="og:description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
-<meta property="og:image" content="https://raisensoulz.github.io/Portfolio/assets/img/og-preview.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:locale" content="es_ES">
+  let seed = 42;
+  function rand() {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  }
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Daniel Estor Fuentes — Técnico de sonido y diseñador multimedia">
-<meta name="twitter:description" content="Portfolio de Daniel Estor Fuentes: sonido, vídeo y contenido interactivo.">
-<meta name="twitter:image" content="https://raisensoulz.github.io/Portfolio/assets/img/og-preview.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+  let d = `M 0 ${mid}`;
+  for (let i = 0; i <= points; i++) {
+    const x = (i / points) * width;
+    const amp = (Math.sin(i * 0.35) * 0.5 + rand() * 0.7) * (mid * 0.85);
+    d += ` L ${x.toFixed(1)} ${(mid + amp).toFixed(1)}`;
+  }
 
-<!-- Waveform / playhead scroll indicator -->
-<div class="waveform-bar" aria-hidden="true">
-  <svg id="waveform-svg" viewBox="0 0 1000 40" preserveAspectRatio="none"></svg>
-  <div class="playhead" id="playhead"></div>
-</div>
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', d);
+  svg.appendChild(path);
+}
 
-<nav class="nav">
-  <span class="nav-mark">D.E.F.</span>
-  <div class="nav-links">
-    <a href="#sobre-mi"><span class="tc">00:01</span>Sobre mí</a>
-    <a href="#proyectos"><span class="tc">00:02</span>Proyectos</a>
-    <a href="#skills"><span class="tc">00:03</span>Skills</a>
-    <a href="#contacto"><span class="tc">00:04</span>Contacto</a>
-  </div>
-</nav>
+// Mueve el playhead (línea roja) según el progreso de scroll de la página
+function initPlayhead() {
+  const playhead = document.getElementById('playhead');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-<main>
+  function update() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+    playhead.style.left = `${(progress * 100).toFixed(2)}%`;
+  }
 
-  <!-- HERO -->
-  <section class="hero" id="inicio">
-    <span class="tc hero-tc">REC ● 02:02:19:85</span>
-    <h1>Daniel Estor Fuentes</h1>
-    <p class="hero-role">Técnico de sonido, productor musical y diseñador multimedia</p>
-    <p class="hero-tagline">Creador audiovisual especializado en sonido, vídeo y contenido interactivo.</p>
-    <a href="#sobre-mi" class="hero-cta">Ver el montaje <span aria-hidden="true">↓</span></a>
-  </section>
+  update();
+  if (reduceMotion) return;
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+}
 
-  <!-- SOBRE MÍ -->
-  <section class="sobre-mi" id="sobre-mi">
-    <div class="section-head">
-      <span class="tc">00:01</span>
-      <h2>Sobre mí</h2>
-    </div>
-    <div class="bio-grid">
-      <!-- EDITA AQUÍ: texto de presentación (puedes añadir más párrafos <p class="bio-text">...</p>) -->
-      <div class="bio-text-group">
-        <p class="bio-text bio-text-lead">Soy Daniel Estor Fuentes, técnico de sonido, productor musical y diseñador multimedia.</p>
-        <p class="bio-text">
-          Máster en Diseño y Producción Multimedia por UNIR y grado en Producción de Música y Sonido para la Industria del Entretenimiento por ENTI–Universidad de Barcelona.
-        </p>
-        <p class="bio-text">
-          He trabajado como técnico de sonido en SGAE, Niñas del Mago (dúo de artistas de magia) y como técnico multimedia y realizador en RTV El Vendrell.
-        </p>
-        <p class="bio-text">
-          Creatividad, comunicación, trabajo en equipo, organización, resolución de problemas y aprendizaje continuo son los pilares con los que afronto cada proyecto.
-        </p>
-      </div>
-    </div>
-  </section>
+// Recuerda qué bloques (A/B/C) están abiertos mientras se navega por la pestaña
+// (se resetea si se cierra el navegador, para que cada visita empiece limpia)
+const ACCORDION_STORAGE_KEY = 'proyectos-bloques-abiertos';
 
-  <!-- PROYECTOS -->
-  <section class="proyectos" id="proyectos">
-    <div class="section-head">
-      <span class="tc">00:02</span>
-      <h2>Proyectos</h2>
-      <p class="section-desc">Tres disciplinas diferentes.</p>
-    </div>
+function getOpenBlocksState() {
+  try {
+    return JSON.parse(sessionStorage.getItem(ACCORDION_STORAGE_KEY)) || {};
+  } catch (e) {
+    return {};
+  }
+}
 
-    <!-- BLOQUE A — MÚSICA -->
-    <div class="track-group-head" role="button" tabindex="0" aria-expanded="false">
-      <span class="tc">A</span>
-      <h3>Música y Sonido</h3>
-      <span class="toggle-icon" aria-hidden="true">▾</span>
-    </div>
-    <div class="track-list">
+function setBlockOpenState(letter, isOpen) {
+  try {
+    const state = getOpenBlocksState();
+    state[letter] = isOpen;
+    sessionStorage.setItem(ACCORDION_STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    // sessionStorage no disponible (modo privado, etc.) — se ignora sin romper la web
+  }
+}
 
-<!-- A1 Composición -->
-      <article class="track" id="a1">
-        <div class="track-meta">
-          <span class="tc">A1</span>
-          <span class="track-tag">Composición</span>
-        </div>
-        <h3>Piezas propias</h3>
-        <p>Cada composición incluye partitura y reproductor de audio, escritas y maquetadas con MuseScore.</p>
+document.addEventListener('DOMContentLoaded', () => {
+  buildWaveform();
+  initPlayhead();
+  initLightbox();
+  initAccordions();
+  initTrackToggles();
+  initDeepLink();
+});
 
-        <!-- EDITA AQUÍ: cada pieza va en un bloque .composition-piece — copia y pega este bloque para añadir más -->
-        <div class="track-detail">
-<div class="composition-piece">
-          <img src="assets/img/variaciones-en-fm.png" alt="Partitura de Variaciones en Fm" class="composition-cover">
-          <div class="composition-info">
-            <h4>Variaciones en Fm</h4>
-            <p>Fue la primera vez que me metí de lleno en el minimalismo (Philip Glass, Steve Reich, Hans Zimmer) sin tener muy claro si iba a salir bien parado. Terminé con algún paralelismo de más entre voces que no debería tener, pero es la primera composición mía que realmente me hizo sentir algo al escucharla — y eso me quedo.</p>
-            <audio controls src="assets/audio/variaciones-en-fm.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
+// Deep-linking: si la URL trae un #ancla que apunta a una pieza dentro de un
+// bloque colapsado (A/B/C), lo abre automáticamente y hace scroll hasta ella.
+function initDeepLink() {
+  function openTargetFromHash(animate) {
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) return;
+    let target;
+    try {
+      target = document.querySelector(hash);
+    } catch (e) {
+      return; // hash no válido como selector
+    }
+    if (!target) return;
 
-        <div class="composition-piece">
-          <img src="assets/img/musica-de-batalla.png" alt="Partitura orquestal de Música de batalla para videojuego" class="composition-cover">
-          <div class="composition-info">
-            <h4>Música de batalla para videojuego</h4>
-            <p>Composición orquestal para banda sonora de videojuego, escrita para orquesta completa (maderas, metales, timbales y cuerda). Progresión armónica que combina acordes diatónicos y adiatónicos para generar tensión dramática.</p>
-            <audio controls src="assets/audio/musica-de-batalla.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
+    const list = target.closest('.track-list');
+    if (!list) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    const head = list.previousElementSibling;
+    if (!head || !head.classList.contains('track-group-head')) return;
 
-        <div class="composition-piece">
-          <img src="assets/img/musica-de-exploracion.png" alt="Partitura de Música de exploración para videojuego" class="composition-cover">
-          <div class="composition-info">
-            <h4>Música de exploración para videojuego</h4>
-            <p>Composición para flauta, clarinete en Si♭ y piano, pensada como música de exploración de gameplay. Textura ligera y melódica que acompaña el ritmo pausado de la exploración.</p>
-            <audio controls src="assets/audio/musica-de-exploracion.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-          <div class="composition-note">
-            <a href="https://youtu.be/Lg4gIaTI5-c" class="track-link" target="_blank" rel="noopener">Ver en YouTube ↗</a>
-          </div>
-        </div>
+    // Si el ancla apunta a una pieza con contenido plegable (segundo nivel), abrirla también
+    function openOwnDetail() {
+      const detail = target.matches('.track-detail')
+        ? target
+        : target.querySelector(':scope > .track-detail') || target.closest('article.track')?.querySelector(':scope > .track-detail');
+      if (!detail) return;
+      const meta = detail.closest('article.track')?.querySelector('.track-meta');
+      if (meta) meta.setAttribute('aria-expanded', 'true');
+      detail.style.maxHeight = 'none';
+    }
 
-        <div class="composition-piece">
-          <img src="assets/img/musica-de-cinematica.png" alt="Partitura de Música de cinemática para videojuego" class="composition-cover">
-          <div class="composition-info">
-            <h4>Música de cinemática para videojuego</h4>
-            <p>Composición para cinemática. Progresión armónica en Do♯ menor con acordes de paso adiatónicos que aportan tensión dramática a la escena.</p>
-            <audio controls src="assets/audio/musica-de-cinematica.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-          <div class="composition-note">
-            <a href="https://www.youtube.com/watch?v=PB4MI5a6qKU" class="track-link" target="_blank" rel="noopener">Ver en YouTube ↗</a>
-          </div>
-        </div>
+    function doScroll() {
+      openOwnDetail();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-        <div class="composition-piece">
-          <img src="assets/img/no-time-to-die.png" alt="Partitura del arreglo No time to die para cuarteto de cuerda y piano" class="composition-cover">
-          <div class="composition-info">
-            <h4>Arreglo del tema: No time to cry</h4>
-            <p>Arreglo para cuarteto de cuerda (violín, viola, violonchelo y contrabajo) y piano de "No Time to Die". Reescritura instrumental de una obra existente, adaptada para formación de cámara.</p>
-            <audio controls src="assets/audio/no-time-to-die.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
-        </div>
-      </article>
+    if (head.getAttribute('aria-expanded') === 'true') {
+      doScroll();
+      return;
+    }
 
-      <!-- A2 Edición de partituras -->
-      <article class="track" id="a2">
-        <div class="track-meta">
-          <span class="tc">A2</span>
-          <span class="track-tag">Edición de partituras</span>
-        </div>
-        <h3>Maquetación</h3>
-        <div class="track-detail">
-<div class="composition-piece composition-piece--single">
-          <img src="assets/img/edicion-mozart-sinfonia29.png" alt="Edición de partitura de la Sinfonía n.º 29 de Mozart" class="composition-cover">
-          <div class="composition-info">
-            <h4>K.201 — Allegro moderato</h4>
-            <p>Edición y grabado del primer movimiento de la Sinfonía n.º 29 de Mozart, para orquesta de cámara (oboes, trompas en La, violín I y II, viola, violonchelo y contrabajo).</p>
-          </div>
-        </div>
-        </div>
-      </article>
+    head.setAttribute('aria-expanded', 'true');
+    const letterEl = head.querySelector('.tc');
+    if (letterEl) setBlockOpenState(letterEl.textContent.trim(), true);
 
-      <!-- A3 Diseño de sonido -->
-      <article class="track" id="a3">
-        <div class="track-meta">
-          <span class="tc">A3</span>
-          <span class="track-tag">Diseño de sonido</span>
-        </div>
-        <h3>Síntesis</h3>
-        <p>Diseño de sonido realizado con los sintetizadores Voltage Modular y Serum.</p>
-        <div class="track-detail">
-<div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/diseno-sonido-daniel-estor.png" alt="Vídeo de diseño de sonido con Voltage Modular" class="composition-cover video-thumb" data-video="assets/video/diseno-sonido-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Recreación de la banda sonora de Super Mario Bros.</h4>
-            <p>Sonidos sincronizados a la imagen, creados desde cero con síntesis.</p>
-          </div>
-        </div>
+    if (animate) {
+      list.style.maxHeight = list.scrollHeight + 'px';
+      list.addEventListener('transitionend', function onEnd() {
+        list.style.maxHeight = 'none';
+        list.removeEventListener('transitionend', onEnd);
+        doScroll();
+      });
+    } else {
+      // Carga inicial de la página: abrir sin animación y desplazar directamente
+      list.style.maxHeight = 'none';
+      doScroll();
+    }
+  }
 
-        <div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/diseno-sonido-videojuegos-daniel-estor.png" alt="Vídeo de diseño de sonido para gameplay de disparos" class="composition-cover video-thumb" data-video="assets/video/diseno-sonido-videojuegos-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Diseño de sonido para gameplay</h4>
-            <p>Efectos de disparo, impacto y ambiente creados y sincronizados a una secuencia de gameplay en primera persona.</p>
-          </div>
-        </div>
-        </div>
-      </article>
+  openTargetFromHash(false);
+  window.addEventListener('hashchange', () => openTargetFromHash(true));
+}
 
-      <!-- A4 Foley -->
-      <article class="track" id="a4">
-        <div class="track-meta">
-          <span class="tc">A4</span>
-          <span class="track-tag">Foley</span>
-        </div>
-        <h3>Foley</h3>
-        <div class="track-detail">
-<div class="composition-piece composition-piece--single">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/foley-daniel-estor.png" alt="Vídeo del ejercicio de foley" class="composition-cover video-thumb" data-video="assets/video/foley-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <p>Grabación de efectos de sonido propios (pasos, ropa, objetos) sincronizados y ajustados al fotograma de una escena de referencia.</p>
-          </div>
-        </div>
-        </div>
-      </article>
+// Desplegables de segundo nivel: cada pieza (A1, A2...) se colapsa a su fila
+// de título; se expande al hacer clic en la fila o activar el código con teclado.
+function initTrackToggles() {
+  document.querySelectorAll('.track-detail').forEach(detail => {
+    const article = detail.closest('article.track');
+    if (!article) return;
+    const meta = article.querySelector('.track-meta');
+    if (!meta) return;
 
-      <!-- A5 Film Scoring -->
-      <article class="track" id="a5">
-        <div class="track-meta">
-          <span class="tc">A5</span>
-          <span class="track-tag">Film Scoring</span>
-        </div>
-        <h3>Bandas sonoras</h3>
-        <p>El Film Scoring es el arte de crear música original para cine, televisión o videojuegos, realzando la narrativa y guiando las emociones del espectador.</p>
-        <div class="track-detail">
-<div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/musica-comedia-daniel-estor.png" alt="Vídeo de música para animación de comedia" class="composition-cover video-thumb" data-video="assets/video/musica-comedia-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Música para animación de comedia</h4>
-            <p>Composición musical para una escena de animación de tono cómico, sincronizada al ritmo y los gags visuales de la imagen.</p>
-          </div>
-        </div>
+    article.classList.add('has-detail');
+    meta.setAttribute('role', 'button');
+    meta.setAttribute('tabindex', '0');
+    meta.setAttribute('aria-expanded', 'false');
 
-        <div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/gameplay-zelda-daniel-estor.png" alt="Gameplay recreando The Legend of Zelda con música y foley propios" class="composition-cover video-thumb" data-video="assets/video/gameplay-zelda-daniel-estor.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>Gameplay: recreación de Zelda</h4>
-            <p>Reconstruir de cero el sonido de Zelda —música, pasos, menús, cada golpe de espada— y que encajara en cada sección sin que sonara a "versión casera" fue lo más ambicioso que he encarado hasta ahora.</p>
-          </div>
-        </div>
-        </div>
-      </article>
+    const icon = document.createElement('span');
+    icon.className = 'track-toggle-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = '▾';
+    meta.appendChild(icon);
 
-      <!-- A6 Grabación -->
-      <article class="track" id="a6">
-        <div class="track-meta">
-          <span class="tc">A6</span>
-          <span class="track-tag">Grabación</span>
-        </div>
-        <h3>Sesiones de grabación en directo</h3>
-        <p>Grabaciones realizadas en la Sala Mompou de SGAE Barcelona, donde he tenido la oportunidad de grabar a grupos como Blaumut, Laietana, Los Coming Soon, Berta Garrido y prácticamente a diario audiciones de cámara.</p>
-        <div class="track-detail">
-<div class="gallery-row">
-          <!-- EDITA AQUÍ: cada foto es una <img class="composition-cover gallery-thumb">, copia y pega para añadir más -->
-          <img src="assets/img/grabacion/percusion-piano-escenario.jpg" alt="Percusión latina y piano en el escenario" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/bateria-microfonia.jpg" alt="Batería con microfonía de grabación" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/piano-cola-microfonia.jpg" alt="Piano de cola con microfonía de grabación" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/escenario-piano-bateria.jpg" alt="Escenario con piano de cola y batería preparados para grabar" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/consola-yamaha-dm2000.jpg" alt="Mesa de mezclas Yamaha DM2000" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/patch-bay-tie-lines.jpg" alt="Patch bay con líneas de conexión de la sala" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/rack-preamps.jpg" alt="Rack de previos de micrófono Avalon y Focusrite" class="composition-cover gallery-thumb">
-          <img src="assets/img/grabacion/multiviewer-camaras.jpg" alt="Multivisor con las cámaras de la sesión de grabación" class="composition-cover gallery-thumb">
-        </div>
-        </div>
-      </article>
+    function toggle() {
+      const isOpen = meta.getAttribute('aria-expanded') === 'true';
+      if (isOpen) {
+        detail.style.maxHeight = detail.scrollHeight + 'px';
+        requestAnimationFrame(() => { detail.style.maxHeight = '0px'; });
+        meta.setAttribute('aria-expanded', 'false');
+      } else {
+        meta.setAttribute('aria-expanded', 'true');
+        detail.style.maxHeight = detail.scrollHeight + 'px';
+        detail.addEventListener('transitionend', function onEnd() {
+          if (meta.getAttribute('aria-expanded') === 'true') {
+            detail.style.maxHeight = 'none';
+          }
+          detail.removeEventListener('transitionend', onEnd);
+        });
+      }
+    }
 
-      <!-- EDITA AQUÍ: A7 Producción -->
-      <article class="track" id="a7">
-        <div class="track-meta">
-          <span class="tc">A7</span>
-          <span class="track-tag">Producción</span>
-        </div>
-        <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto de producción musical: contexto, herramientas usadas y resultado.</p>
-      </article>
+    article.addEventListener('click', (e) => {
+      // Permitir que clics dentro del contenido (audio, vídeo, imágenes, enlaces) funcionen con normalidad
+      if (e.target.closest('.track-detail')) return;
+      if (detail.style.maxHeight === 'none') {
+        detail.style.maxHeight = detail.scrollHeight + 'px';
+        requestAnimationFrame(() => { detail.style.maxHeight = '0px'; });
+        meta.setAttribute('aria-expanded', 'false');
+        return;
+      }
+      toggle();
+    });
 
-<!-- A8 Mezcla y Mastering — Transcripción SGAE -->
-      <article class="track" id="a8">
-        <div class="track-meta">
-          <span class="tc">A8</span>
-          <span class="track-tag">Mezcla y Mastering</span>
-        </div>
-        <h3>Volúmenes, panorama, decibelios y LUFS</h3>
-        <p>Trabajos de mezcla y mastering sobre producciones profesionales a partir de las pistas originales.</p>
+    meta.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        article.click();
+      }
+    });
+  });
+}
+// Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic.
+// Recuerda el estado abierto/cerrado durante la sesión de navegación.
+function initAccordions() {
+  const savedState = getOpenBlocksState();
 
-        <div class="track-detail">
-<div class="composition-piece">
-          <div class="video-thumb-wrap">
-            <img src="assets/img/there-eyes-mezcla.png" alt="Vídeo de la mezcla de There Eyes" class="composition-cover video-thumb" data-video="assets/video/there-eyes-mezcla.mp4">
-            <span class="play-icon" aria-hidden="true">▶</span>
-          </div>
-          <div class="composition-info">
-            <h4>There Eyes (Mezcla creativa)</h4>
-            <p>A partir de las pistas originales de la grabación se realizó esta mezcla.</p>
-          </div>
-        </div>
+  document.querySelectorAll('.track-group-head').forEach(head => {
+    const list = head.nextElementSibling;
+    if (!list || !list.classList.contains('track-list')) return;
 
-        <div class="composition-piece">
-          <img src="assets/img/mastering-daniel-estor.png" alt="Sesión de mastering en Pro Tools con Oxford Inflator, OTT y Maxim" class="composition-cover">
-          <div class="composition-info">
-            <h4>Mastering</h4>
-            <p>Proceso de mastering final sobre mezcla propia.</p>
-            <audio controls src="assets/audio/mastering-daniel-estor.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
-        </div>
-      </article>
+    const letterEl = head.querySelector('.tc');
+    const letter = letterEl ? letterEl.textContent.trim() : null;
 
-      <!-- EDITA AQUÍ: A9 DJ -->
-      <article class="track" id="a9">
-        <div class="track-meta">
-          <span class="tc">A9</span>
-          <span class="track-tag">DJ</span>
-        </div>
-        <h3>Título del proyecto</h3>
-        <p>Describe aquí tu trabajo como DJ: sesiones, eventos y estilo.</p>
-      </article>
+    // Contador de subapartados junto al título
+    const count = list.querySelectorAll(':scope > article.track').length;
+    const h3 = head.querySelector('h3');
+    if (h3 && count) {
+      const span = document.createElement('span');
+      span.className = 'item-count';
+      span.textContent = `(${count})`;
+      h3.insertAdjacentElement('afterend', span);
+    }
 
-    </div>
+    // Restaurar estado guardado de esta sesión de navegación (sin animación)
+    if (letter && savedState[letter]) {
+      head.setAttribute('aria-expanded', 'true');
+      list.style.maxHeight = 'none';
+    }
 
-    <!-- BLOQUE B — IMAGEN -->
-    <div class="track-group-head" role="button" tabindex="0" aria-expanded="false">
-      <span class="tc">B</span>
-      <h3>Imagen</h3>
-      <span class="toggle-icon" aria-hidden="true">▾</span>
-    </div>
-    <div class="track-list">
+    function toggle() {
+      const isOpen = head.getAttribute('aria-expanded') === 'true';
+      if (isOpen) {
+        list.style.maxHeight = list.scrollHeight + 'px';
+        requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
+        head.setAttribute('aria-expanded', 'false');
+        if (letter) setBlockOpenState(letter, false);
+      } else {
+        head.setAttribute('aria-expanded', 'true');
+        list.style.maxHeight = list.scrollHeight + 'px';
+        // tras la transición, permitir crecer libremente si el contenido cambia (imágenes cargando)
+        list.addEventListener('transitionend', function onEnd() {
+          if (head.getAttribute('aria-expanded') === 'true') {
+            list.style.maxHeight = 'none';
+          }
+          list.removeEventListener('transitionend', onEnd);
+        });
+        if (letter) setBlockOpenState(letter, true);
+      }
+    }
 
-      <!-- EDITA AQUÍ: B1 Portadas corporativas -->
-      <article class="track" id="b1">
-        <div class="track-meta">
-          <span class="tc">B1</span>
-          <span class="track-tag">Portadas corporativas</span>
-        </div>
-        <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto de portadas corporativas: para quién, herramientas y resultado.</p>
-      </article>
+    head.addEventListener('click', () => {
+      // si estaba en 'none' (totalmente abierto), fijar altura actual antes de colapsar
+      if (list.style.maxHeight === 'none') {
+        list.style.maxHeight = list.scrollHeight + 'px';
+        requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
+        head.setAttribute('aria-expanded', 'false');
+        if (letter) setBlockOpenState(letter, false);
+        return;
+      }
+      toggle();
+    });
 
-      <!-- B2 Marca personal -->
-      <article class="track" id="b2">
-        <div class="track-meta">
-          <span class="tc">B2</span>
-          <span class="track-tag">Marca personal</span>
-        </div>
-        <h3>Raisen Soulz</h3>
-        <p>Identidad visual de mi proyecto personal como productor de géneros musicales contundentes como Hardstyle y Raw.</p>
-        <div class="track-detail">
-<div class="composition-piece composition-piece--single">
-          <img src="assets/img/raisen-soulz-logo.png" alt="Logo de Raisen Soulz" class="composition-cover brand-logo">
-          <div class="composition-info">
-            <h4>Logotipo</h4>
-            <p>Diseño de marca para Raisen Soulz, mi alias como productor musical.</p>
-          </div>
-        </div>
-        </div>
-      </article>
+    head.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        head.click();
+      }
+    });
+  });
+}
 
-    </div>
+// Lightbox: clic (o Enter/Espacio con teclado) en imágenes .composition-cover
+// las abre en grande. Si la miniatura tiene data-video, abre un vídeo en su lugar.
+// Mientras está abierto, el foco queda atrapado dentro y se devuelve a la
+// miniatura de origen al cerrar.
+function initLightbox() {
+  const overlay = document.getElementById('lightbox');
+  const overlayImg = document.getElementById('lightbox-img');
+  const overlayVideo = document.getElementById('lightbox-video');
+  const closeBtn = document.getElementById('lightbox-close-btn');
+  if (!overlay || !overlayImg || !overlayVideo || !closeBtn) return;
 
-    <!-- BLOQUE C — MULTIMEDIA -->
-    <div class="track-group-head" role="button" tabindex="0" aria-expanded="false">
-      <span class="tc">C</span>
-      <h3>Multimedia</h3>
-      <span class="toggle-icon" aria-hidden="true">▾</span>
-    </div>
-    <div class="track-list">
+  let lastFocused = null;
 
-      <!-- C1 Interactivo — Pandemia: Feria de Abril -->
-      <article class="track" id="c1">
-        <div class="track-meta">
-          <span class="tc">C1</span>
-          <span class="track-tag">Interactivo</span>
-        </div>
-        <h3>Pandemia: Feria de Abril</h3>
-        <p>Relato ramificado de 14 pasajes en Twine, con imágenes generadas por IA animadas en Runway Gen-4, montaje en CapCut y música original de Suno AI. Vídeo servido vía Vimeo, audio vía Cloudinary.</p>
-      </article>
+  function open(el) {
+    lastFocused = el;
+    const videoSrc = el.dataset.video;
+    if (videoSrc) {
+      overlayImg.style.display = 'none';
+      overlayVideo.style.display = 'block';
+      overlayVideo.src = videoSrc;
+      overlay.classList.add('active');
+      overlayVideo.play().catch(() => {});
+    } else {
+      overlayVideo.style.display = 'none';
+      overlayImg.style.display = 'block';
+      overlayImg.src = el.src;
+      overlayImg.alt = el.alt;
+      overlay.classList.add('active');
+    }
+    closeBtn.focus();
+    document.addEventListener('keydown', trapFocus);
+  }
 
-      <!-- EDITA AQUÍ: C2 Web -->
-      <article class="track" id="c2">
-        <div class="track-meta">
-          <span class="tc">C2</span>
-          <span class="track-tag">Web</span>
-        </div>
-        <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto web: qué es, con qué lo hiciste y el resultado.</p>
-      </article>
+  function close() {
+    overlay.classList.remove('active');
+    overlayImg.src = '';
+    overlayVideo.pause();
+    overlayVideo.src = '';
+    document.removeEventListener('keydown', trapFocus);
+    if (lastFocused) lastFocused.focus();
+  }
 
-      <!-- C3 App — Boo Reader -->
-      <article class="track" id="c3">
-        <div class="track-meta">
-          <span class="tc">C3</span>
-          <span class="track-tag">App</span>
-        </div>
-        <h3>Boo Reader</h3>
-        <p>App móvil de seguimiento de lectura desarrollada en Unity como Trabajo de Fin de Estudios, en equipo. Diseño de UI, lógica de progreso y validación en Play mode.</p>
-      </article>
+  function getFocusableInOverlay() {
+    return Array.from(overlay.querySelectorAll('button, video, [tabindex]:not([tabindex="-1"])'))
+      .filter(elm => elm.offsetParent !== null); // solo los visibles
+  }
 
-      <!-- EDITA AQUÍ: C4 Realización -->
-      <article class="track" id="c4">
-        <div class="track-meta">
-          <span class="tc">C4</span>
-          <span class="track-tag">Realización</span>
-        </div>
-        <h3>Título del proyecto</h3>
-        <p>Describe aquí el proyecto de realización: contexto (por ejemplo, RTV El Vendrell), rol y resultado.</p>
-      </article>
+  function trapFocus(e) {
+    if (e.key === 'Escape') {
+      close();
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const focusable = getFocusableInOverlay();
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
 
-      <!-- C5 Locución -->
-      <article class="track" id="c5">
-        <div class="track-meta">
-          <span class="tc">C5</span>
-          <span class="track-tag">Locución</span>
-        </div>
-        <h3>Radiodifusión</h3>
-        <p>Grabación de locución en cabina de radio profesional en los estudios de A3 Media en Madrid.</p>
-        <div class="track-detail">
-<div class="composition-piece composition-piece--single">
-          <img src="assets/img/locucion-cabina.jpg" alt="Cabina de locución de radio" class="composition-cover">
-          <div class="composition-info">
-            <h4>Demo de locución</h4>
-            <p>Prácticas realizadas dentro del certificado de La Radio Musical de AtresMedia Formación.</p>
-            <audio controls src="assets/audio/demo-locucion.mp3">
-              Tu navegador no soporta la reproducción de audio.
-            </audio>
-          </div>
-        </div>
-        </div>
-      </article>
+  document.querySelectorAll('.composition-cover').forEach(el => {
+    // Hacer las miniaturas accesibles por teclado
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    const action = el.dataset.video ? 'Reproducir vídeo' : 'Ampliar imagen';
+    el.setAttribute('aria-label', `${action}: ${el.alt || ''}`);
 
-    </div>
-  </section>
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      open(el);
+    });
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open(el);
+      }
+    });
+  });
 
-  <!-- SKILLS -->
-  <section class="skills" id="skills">
-    <div class="section-head">
-      <span class="tc">00:03</span>
-      <h2>Skills</h2>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.1</span>
-        <h3>Audio &amp; Sonido</h3>
-        <p>Pro Tools, Cubase, Logic, Reaper y Audacity.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.2</span>
-        <h3>Diseño Multimedia</h3>
-        <p>DaVinci Resolve, Edius, Maya, Adobe Suite, Canva y Genially.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.3</span>
-        <h3>Motores de Juego</h3>
-        <p>Unreal Engine 5 y Unity.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.4</span>
-        <h3>Middleware</h3>
-        <p>FMOD y Wwise.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.5</span>
-        <h3>Programación</h3>
-        <p>WebStorm, Node.js, Visual Studio Code, Figma y Twine.</p>
-      </div>
-      <div class="skill-channel">
-        <span class="tc channel-tc">CH.6</span>
-        <h3>Ofimática</h3>
-        <p>Word, Excel y Google Workspace.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section class="contacto" id="contacto">
-    <div class="section-head">
-      <span class="tc">00:04</span>
-      <h2>Contacto</h2>
-    </div>
-    <p class="contact-text">¿Un proyecto en mente? Hablemos.</p>
-    <div class="contact-links">
-      <a href="mailto:destorfuentes@gmail.com">destorfuentes@gmail.com</a>
-      <a href="https://www.linkedin.com/in/daniel-estor-fuentes-3b16885b/" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a href="assets/docs/cv-daniel-estor-fuentes.pdf" download class="cv-download">Descargar CV ↓</a>
-    </div>
-  </section>
-
-</main>
-
-<footer class="footer">
-  <span class="tc">END OF REEL</span>
-  <span>© 2026 Daniel Estor Fuentes</span>
-</footer>
-
-<!-- Lightbox para ampliar imágenes -->
-<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Vista ampliada">
-  <button type="button" class="lightbox-close" id="lightbox-close-btn">✕ cerrar</button>
-  <img src="" alt="" id="lightbox-img">
-  <video id="lightbox-video" controls playsinline></video>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) close();
+  });
+  closeBtn.addEventListener('click', close);
+}
