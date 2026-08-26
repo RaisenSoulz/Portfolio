@@ -491,8 +491,8 @@
 </footer>
 
 <!-- Lightbox para ampliar imágenes -->
-<div class="lightbox-overlay" id="lightbox">
-  <span class="lightbox-close">✕ cerrar</span>
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Vista ampliada">
+  <button type="button" class="lightbox-close" id="lightbox-close-btn">✕ cerrar</button>
   <img src="" alt="" id="lightbox-img">
   <video id="lightbox-video" controls playsinline></video>
 </div>
