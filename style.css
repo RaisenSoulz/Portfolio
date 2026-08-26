@@ -294,9 +294,7 @@ section { padding-top: 120px; }
   border-top: 1px solid var(--line);
 }
 .composition-piece--single {
-  border-top: none;
-  margin-top: 0;
-  padding-top: 0;
+  /* mantiene el mismo separador que el resto de piezas */
 }
 .composition-note {
   flex-shrink: 0;
