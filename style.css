@@ -348,22 +348,31 @@ section { padding-top: 120px; }
   background: rgba(10, 9, 8, 0.92);
   display: none;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   z-index: 500;
   cursor: zoom-out;
   padding: 60px 40px;
   overflow-y: auto;
 }
 .lightbox-overlay.active { display: flex; }
-.lightbox-overlay img,
-.lightbox-overlay video {
-  max-width: 100%;
-  width: min(700px, 100%);
+.lightbox-overlay img {
+  max-width: min(700px, 100%);
+  max-height: calc(100vh - 120px);
+  width: auto;
   height: auto;
   border: 1px solid var(--line);
   cursor: default;
 }
-.lightbox-overlay video { display: none; background: #000; }
+.lightbox-overlay video {
+  max-width: 100%;
+  max-height: calc(100vh - 120px);
+  width: auto;
+  height: auto;
+  border: 1px solid var(--line);
+  cursor: default;
+  display: none;
+  background: #000;
+}
 
 .video-thumb-wrap { position: relative; flex-shrink: 0; cursor: zoom-in; }
 .video-thumb-wrap .composition-cover { display: block; }
