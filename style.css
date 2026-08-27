@@ -356,9 +356,8 @@ section { padding-top: 120px; }
 }
 .lightbox-overlay.active { display: flex; }
 .lightbox-overlay img {
-  max-width: min(700px, 100%);
-  max-height: calc(100vh - 120px);
-  width: auto;
+  max-width: 100%;
+  width: min(700px, 100%);
   height: auto;
   border: 1px solid var(--line);
   cursor: default;
