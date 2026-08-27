@@ -269,6 +269,8 @@ function initAccordions() {
 
 // Lightbox: clic (o Enter/Espacio con teclado) en imágenes .composition-cover
 // las abre en grande. Si la miniatura tiene data-video, abre un vídeo en su lugar.
+// Cuando la imagen pertenece a una galería (.gallery-row), aparecen flechas
+// izquierda/derecha para pasar a la siguiente foto sin cerrar el lightbox.
 // Mientras está abierto, el foco queda atrapado dentro y se devuelve a la
 // miniatura de origen al cerrar.
 function initLightbox() {
@@ -276,35 +278,56 @@ function initLightbox() {
   const overlayImg = document.getElementById('lightbox-img');
   const overlayVideo = document.getElementById('lightbox-video');
   const closeBtn = document.getElementById('lightbox-close-btn');
+  const prevBtn = document.getElementById('lightbox-prev-btn');
+  const nextBtn = document.getElementById('lightbox-next-btn');
   if (!overlay || !overlayImg || !overlayVideo || !closeBtn) return;
 
   let lastFocused = null;
+  let currentGroup = [];   // elementos navegables del mismo gallery-row
+  let currentIndex = -1;
 
-  function open(el) {
-    lastFocused = el;
+  function showAt(index) {
+    if (!currentGroup.length) return;
+    currentIndex = (index + currentGroup.length) % currentGroup.length;
+    const el = currentGroup[currentIndex];
     const videoSrc = el.dataset.video;
     if (videoSrc) {
       overlayImg.style.display = 'none';
       overlayVideo.style.display = 'block';
       overlayVideo.src = videoSrc;
-      overlay.classList.add('active');
       overlayVideo.play().catch(() => {});
     } else {
+      overlayVideo.pause();
       overlayVideo.style.display = 'none';
       overlayImg.style.display = 'block';
       overlayImg.src = el.src;
       overlayImg.alt = el.alt;
-      overlay.classList.add('active');
     }
+  }
+
+  function open(el) {
+    lastFocused = el;
+    const group = el.closest('.gallery-row');
+    if (group) {
+      currentGroup = Array.from(group.querySelectorAll('.composition-cover'));
+      overlay.classList.add('has-nav');
+    } else {
+      currentGroup = [el];
+      overlay.classList.remove('has-nav');
+    }
+    overlay.classList.add('active');
+    showAt(currentGroup.indexOf(el));
     closeBtn.focus();
     document.addEventListener('keydown', trapFocus);
   }
 
   function close() {
-    overlay.classList.remove('active');
+    overlay.classList.remove('active', 'has-nav');
     overlayImg.src = '';
     overlayVideo.pause();
     overlayVideo.src = '';
+    currentGroup = [];
+    currentIndex = -1;
     document.removeEventListener('keydown', trapFocus);
     if (lastFocused) lastFocused.focus();
   }
@@ -317,6 +340,16 @@ function initLightbox() {
   function trapFocus(e) {
     if (e.key === 'Escape') {
       close();
+      return;
+    }
+    if (e.key === 'ArrowLeft' && currentGroup.length > 1) {
+      e.preventDefault();
+      showAt(currentIndex - 1);
+      return;
+    }
+    if (e.key === 'ArrowRight' && currentGroup.length > 1) {
+      e.preventDefault();
+      showAt(currentIndex + 1);
       return;
     }
     if (e.key !== 'Tab') return;
@@ -351,6 +384,9 @@ function initLightbox() {
       }
     });
   });
+
+  if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); showAt(currentIndex - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); showAt(currentIndex + 1); });
 
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) close();
