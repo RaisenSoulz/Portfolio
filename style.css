@@ -332,9 +332,6 @@ section { padding-top: 120px; }
 }
 .gallery-thumb {
   width: 220px;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  object-position: center;
 }
 @media (max-width: 1000px) {
   .gallery-row { grid-template-columns: repeat(2, 220px); }
@@ -364,6 +361,12 @@ section { padding-top: 120px; }
   height: auto;
   border: 1px solid var(--line);
   cursor: default;
+}
+.lightbox-overlay.has-nav img {
+  max-width: min(700px, 100%);
+  max-height: calc(100vh - 120px);
+  width: auto;
+  height: auto;
 }
 .lightbox-overlay video {
   max-width: 100%;
