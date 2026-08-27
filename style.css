@@ -348,7 +348,7 @@ section { padding-top: 120px; }
   background: rgba(10, 9, 8, 0.92);
   display: none;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 500;
   cursor: zoom-out;
   padding: 60px 40px;
