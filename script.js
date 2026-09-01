@@ -295,7 +295,12 @@ function initLightbox() {
       overlayImg.style.display = 'none';
       overlayVideo.style.display = 'block';
       overlayVideo.src = videoSrc;
-      overlayVideo.play().catch(() => {});
+      overlayVideo.load();
+      const tryPlay = () => {
+        overlayVideo.removeEventListener('canplay', tryPlay);
+        overlayVideo.play().catch(() => {});
+      };
+      overlayVideo.addEventListener('canplay', tryPlay);
     } else {
       overlayVideo.pause();
       overlayVideo.style.display = 'none';
@@ -307,13 +312,14 @@ function initLightbox() {
 
   function open(el) {
     lastFocused = el;
-    const group = el.closest('.gallery-row');
+    const group = !el.dataset.video ? el.closest('.gallery-row') : null;
     if (group) {
-      currentGroup = Array.from(group.querySelectorAll('.composition-cover'));
-      overlay.classList.add('has-nav');
+      currentGroup = Array.from(group.querySelectorAll('.composition-cover')).filter(item => !item.dataset.video);
+      overlay.classList.add('has-nav', 'fit-tall');
     } else {
       currentGroup = [el];
       overlay.classList.remove('has-nav');
+      overlay.classList.toggle('fit-tall', el.dataset.fitTall === 'true');
     }
     overlay.classList.add('active');
     showAt(currentGroup.indexOf(el));
@@ -322,7 +328,7 @@ function initLightbox() {
   }
 
   function close() {
-    overlay.classList.remove('active', 'has-nav');
+    overlay.classList.remove('active', 'has-nav', 'fit-tall');
     overlayImg.src = '';
     overlayVideo.pause();
     overlayVideo.src = '';
