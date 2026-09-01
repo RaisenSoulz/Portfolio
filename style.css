@@ -333,6 +333,9 @@ section { padding-top: 120px; }
 .gallery-thumb {
   width: 220px;
 }
+#b1 .composition-cover {
+  object-position: center;
+}
 @media (max-width: 1000px) {
   .gallery-row { grid-template-columns: repeat(2, 220px); }
 }
