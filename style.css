@@ -362,7 +362,7 @@ section { padding-top: 120px; }
   border: 1px solid var(--line);
   cursor: default;
 }
-.lightbox-overlay.has-nav img {
+.lightbox-overlay.fit-tall img {
   max-width: min(700px, 100%);
   max-height: calc(100vh - 120px);
   width: auto;
