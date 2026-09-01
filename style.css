@@ -490,28 +490,21 @@ section { padding-top: 120px; }
 .composition-info .track-link:hover {
   border-color: var(--accent-teal);
 }
+.track-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.track-title-row .track-link {
+  color: var(--accent-teal);
+}
 .track-links-group {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 4px;
-}
-.track-link-standalone {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--accent-teal);
-  border: 1px solid var(--line);
-  padding: 8px 16px;
-  transition: border-color 0.2s, color 0.2s;
-}
-.track-link-standalone:hover {
-  border-color: var(--accent-teal);
-}
-.track-link-right {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 6px;
 }
 @media (max-width: 640px) {
   .composition-piece { flex-direction: column; }
