@@ -487,6 +487,12 @@ section { padding-top: 120px; }
 .composition-info .track-link:hover {
   border-color: var(--accent-teal);
 }
+.track-links-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
 @media (max-width: 640px) {
   .composition-piece { flex-direction: column; }
   .composition-cover { width: 100%; max-width: 320px; }
