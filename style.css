@@ -342,6 +342,9 @@ section { padding-top: 120px; }
 #c4 .composition-cover {
   object-position: center;
 }
+#c5 .composition-cover {
+  object-position: center;
+}
 @media (max-width: 1000px) {
   .gallery-row { grid-template-columns: repeat(2, 220px); }
 }
