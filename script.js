@@ -305,7 +305,7 @@ function initLightbox() {
       overlayVideo.pause();
       overlayVideo.style.display = 'none';
       overlayImg.style.display = 'block';
-      overlayImg.src = el.src;
+      overlayImg.src = el.dataset.full || el.src;
       overlayImg.alt = el.alt;
     }
   }
