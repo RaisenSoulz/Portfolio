@@ -345,12 +345,6 @@ section { padding-top: 120px; }
 #c5 .composition-cover {
   object-position: center;
 }
-.newsletter-cover {
-  object-position: center 24%;
-}
-.wanafest-cover {
-  object-position: center 14%;
-}
 @media (max-width: 1000px) {
   .gallery-row { grid-template-columns: repeat(2, 220px); }
 }
