@@ -346,7 +346,7 @@ section { padding-top: 120px; }
   object-position: center;
 }
 .newsletter-cover {
-  object-position: center 34%;
+  object-position: center 24%;
 }
 @media (max-width: 1000px) {
   .gallery-row { grid-template-columns: repeat(2, 220px); }
