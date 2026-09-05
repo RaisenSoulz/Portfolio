@@ -70,14 +70,18 @@ a { color: inherit; text-decoration: none; }
   top: 40px; left: 0; right: 0;
   z-index: 190;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 18px 6vw;
   background: linear-gradient(to bottom, rgba(18,17,16,0.92), rgba(18,17,16,0));
   pointer-events: none;
 }
 .nav > * { pointer-events: auto; }
-.nav-mark {
+.nav-mark-static {
+  position: absolute;
+  top: 58px;
+  left: 6vw;
+  z-index: 150;
   font-family: var(--font-mono);
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -577,20 +581,21 @@ section { padding-top: 120px; }
 .bio-text-group { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 0; }
 .bio-photos {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 16px;
   flex-shrink: 0;
-  width: 220px;
+  width: 340px;
+  align-self: center;
 }
 .bio-photo {
-  width: 220px;
-  aspect-ratio: 4 / 5;
+  width: 162px;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   object-position: center;
 }
 @media (max-width: 900px) {
   .bio-grid { flex-direction: column; }
-  .bio-photos { flex-direction: row; width: 100%; }
+  .bio-photos { width: 100%; align-self: stretch; }
   .bio-photo { width: 100%; flex: 1; }
 }
 .bio-text { font-size: 1.1rem; color: var(--fg-dim); max-width: 62ch; }
