@@ -245,6 +245,7 @@ section { padding-top: 120px; }
 }
 .track:last-child { border-bottom: 1px solid var(--line); }
 .track:hover { background: var(--bg-alt); }
+.track:hover .track-tag { color: var(--fg); }
 .track.has-detail { cursor: pointer; }
 
 .track-detail {
@@ -285,6 +286,7 @@ section { padding-top: 120px; }
   font-size: 1.05rem;
   color: var(--fg-faint);
   letter-spacing: 0.05em;
+  transition: color 0.2s;
 }
 .track h3 {
   font-family: var(--font-display);
