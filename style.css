@@ -218,8 +218,11 @@ section { padding-top: 120px; }
   color: var(--accent-teal);
 }
 .collapse-footer--block {
-  padding-left: 6vw;
-  margin-bottom: 0;
+  width: 100%;
+  justify-content: center;
+  padding: 16px 6vw;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
 }
 .track-group-head[aria-expanded="true"] .toggle-icon {
   transform: rotate(180deg);
