@@ -612,10 +612,7 @@ section { padding-top: 120px; }
   .bio-photo { height: 100%; }
 }
 .bio-text { font-size: 1.1rem; color: var(--fg-dim); max-width: 62ch; }
-.bio-text-lead { font-size: clamp(0.85rem, 1.65vw, 1.1rem); white-space: nowrap; max-width: none; }
-@media (max-width: 700px) {
-  .bio-text-lead { white-space: normal; font-size: 1.1rem; }
-}
+.bio-text-lead { font-size: 1.1rem; }
 .bio-facts {
   list-style: none;
   display: flex;
