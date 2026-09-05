@@ -195,6 +195,18 @@ function initTrackToggles() {
         article.click();
       }
     });
+
+    // Enlace para contraer desde el final de la pieza, sin tener que volver arriba
+    const collapseBtn = document.createElement('button');
+    collapseBtn.type = 'button';
+    collapseBtn.className = 'collapse-footer';
+    collapseBtn.innerHTML = '<span aria-hidden="true">▴</span> Contraer';
+    collapseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggle();
+      meta.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    detail.appendChild(collapseBtn);
   });
 }
 // Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic.
@@ -264,6 +276,18 @@ function initAccordions() {
         head.click();
       }
     });
+
+    // Enlace para contraer desde el final del bloque, sin tener que volver arriba
+    const collapseBtn = document.createElement('button');
+    collapseBtn.type = 'button';
+    collapseBtn.className = 'collapse-footer collapse-footer--block';
+    collapseBtn.innerHTML = '<span aria-hidden="true">▴</span> Contraer bloque';
+    collapseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggle();
+      head.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    list.appendChild(collapseBtn);
   });
 }
 
