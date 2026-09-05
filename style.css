@@ -580,12 +580,11 @@ section { padding-top: 120px; }
 /* ---------- Sobre mí ---------- */
 .sobre-mi-layout {
   display: flex;
-  justify-content: center;
   gap: 48px;
   padding: 0 6vw 20px;
 }
 .sobre-mi-text {
-  flex: 0 1 640px;
+  flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
