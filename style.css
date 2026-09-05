@@ -320,6 +320,11 @@ section { padding-top: 120px; }
   background: #f2ede4;
   padding: 16px;
 }
+.bolero-cover {
+  object-fit: contain;
+  background: var(--bg-alt);
+  padding: 8px;
+}
 
 /* ---------- Galería en cuadrícula (todas visibles) ---------- */
 .gallery-row {
@@ -406,9 +411,10 @@ section { padding-top: 120px; }
   pointer-events: none;
 }
 .lightbox-close {
-  position: absolute;
+  position: fixed;
   top: 24px;
   right: 32px;
+  z-index: 510;
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--fg-dim);
