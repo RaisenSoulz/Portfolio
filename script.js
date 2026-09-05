@@ -72,7 +72,35 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordions();
   initTrackToggles();
   initDeepLink();
+  initBioPhotosWidth();
 });
+
+// Ajusta el ancho del bloque de fotos de "Sobre mí" para que coincida
+// exactamente con el espacio que ocupan los enlaces de navegación
+// (desde "00:01 Sobre mí" hasta el final de "Contacto"), ya que ambos
+// comparten el mismo margen derecho de la página.
+function initBioPhotosWidth() {
+  const navLinks = document.querySelector('.nav-links');
+  const bioPhotos = document.querySelector('.bio-photos');
+  if (!navLinks || !bioPhotos) return;
+
+  function sync() {
+    if (window.innerWidth <= 900 || getComputedStyle(navLinks).display === 'none') {
+      bioPhotos.style.width = '';
+      return;
+    }
+    const rect = navLinks.getBoundingClientRect();
+    if (rect.width > 0) {
+      bioPhotos.style.width = rect.width + 'px';
+    }
+  }
+
+  sync();
+  window.addEventListener('resize', sync);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(sync);
+  }
+}
 
 // Deep-linking: si la URL trae un #ancla que apunta a una pieza dentro de un
 // bloque colapsado (A/B/C), lo abre automáticamente y hace scroll hasta ella.
