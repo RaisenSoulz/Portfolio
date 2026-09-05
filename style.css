@@ -195,6 +195,28 @@ section { padding-top: 120px; }
   font-size: 0.85rem;
   color: var(--fg-faint);
 }
+.collapse-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 24px 0 8px;
+  padding: 8px 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.collapse-footer:hover,
+.collapse-footer:focus-visible {
+  color: var(--accent-teal);
+}
+.collapse-footer--block {
+  padding-left: 6vw;
+  margin-bottom: 0;
+}
 .track-group-head[aria-expanded="true"] .toggle-icon {
   transform: rotate(180deg);
 }
