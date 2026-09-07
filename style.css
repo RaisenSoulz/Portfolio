@@ -292,7 +292,6 @@ section { padding-top: 120px; }
   font-family: var(--font-mono);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--accent-amber);
   margin: 32px 0 4px;
 }
