@@ -288,6 +288,15 @@ section { padding-top: 120px; }
   letter-spacing: 0.05em;
   transition: color 0.2s;
 }
+.category-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-amber);
+  margin: 32px 0 4px;
+}
+.category-label:first-of-type { margin-top: 8px; }
 .track h3 {
   font-family: var(--font-display);
   font-size: 1.5rem;
