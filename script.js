@@ -73,7 +73,23 @@ document.addEventListener('DOMContentLoaded', () => {
   initTrackToggles();
   initDeepLink();
   initBioPhotosWidth();
+  initSingleMediaPlayback();
 });
+
+// Al reproducir un audio o vídeo, pausa cualquier otro que estuviera sonando,
+// para que nunca se solapen dos reproducciones a la vez.
+function initSingleMediaPlayback() {
+  const mediaEls = Array.from(document.querySelectorAll('audio, video'));
+  mediaEls.forEach(el => {
+    el.addEventListener('play', () => {
+      mediaEls.forEach(other => {
+        if (other !== el && !other.paused) {
+          other.pause();
+        }
+      });
+    });
+  });
+}
 
 // Ajusta el ancho del bloque de fotos de "Sobre mí" para que coincida
 // exactamente con el espacio que ocupan los enlaces de navegación
