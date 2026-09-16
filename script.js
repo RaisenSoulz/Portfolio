@@ -74,7 +74,43 @@ document.addEventListener('DOMContentLoaded', () => {
   initDeepLink();
   initBioPhotosWidth();
   initSingleMediaPlayback();
+  initMobileNav();
 });
+
+// Menú móvil: el botón hamburguesa abre/cierra el panel de navegación
+// a pantalla completa por debajo de 720px. Se cierra al elegir un enlace,
+// al pulsar Escape, o si la ventana se ensancha por encima del breakpoint.
+function initMobileNav() {
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  if (!toggle || !links) return;
+
+  function close() {
+    links.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Abrir menú');
+  }
+  function open() {
+    links.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', 'Cerrar menú');
+  }
+
+  toggle.addEventListener('click', () => {
+    const isOpen = links.classList.contains('is-open');
+    isOpen ? close() : open();
+  });
+
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && links.classList.contains('is-open')) close();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 720) close();
+  });
+}
 
 // Al reproducir un audio o vídeo, pausa cualquier otro que estuviera sonando,
 // para que nunca se solapen dos reproducciones a la vez.
