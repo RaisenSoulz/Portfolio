@@ -74,7 +74,8 @@ a { color: inherit; text-decoration: none; }
   justify-content: flex-end;
   align-items: center;
   padding: 18px 6vw;
-  background: linear-gradient(to bottom, rgba(18,17,16,0.92), rgba(18,17,16,0));
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--line);
   pointer-events: none;
 }
 .nav > * { pointer-events: auto; }
