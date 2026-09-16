@@ -223,50 +223,42 @@ section { padding-top: 120px; }
 .featured-grid {
   padding: 0 6vw 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, 220px);
+  gap: 28px 20px;
 }
 .featured-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--line);
-  background: var(--bg-alt);
-  transition: border-color 0.2s, transform 0.2s;
-}
-.featured-card:hover {
-  border-color: var(--accent-amber);
-  transform: translateY(-3px);
-}
-.featured-card:focus-visible {
-  outline: 2px solid var(--accent-teal);
-  outline-offset: 2px;
+  gap: 10px;
 }
 .featured-cover {
-  width: 100%;
+  width: 220px;
   aspect-ratio: 16 / 9;
   object-fit: cover;
   object-position: center;
-  display: block;
-  border-bottom: 1px solid var(--line);
+  border-radius: 2px;
+  border: 1px solid var(--line);
+  background: var(--bg-alt);
+  transition: opacity 0.2s;
 }
-.featured-info {
-  padding: 14px 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.featured-card:hover .featured-cover { opacity: 0.85; }
+.featured-card:focus-visible .featured-cover {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
 }
-.featured-info .tc { color: var(--accent-teal); }
+.featured-info { display: flex; flex-direction: column; gap: 4px; }
+.featured-info .tc { color: var(--accent-teal); font-size: 0.7rem; }
 .featured-info h3 {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 1.02rem;
+  font-size: 0.92rem;
   color: var(--fg);
+  max-width: 220px;
 }
-@media (max-width: 1000px) {
-  .featured-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 640px) {
+@media (max-width: 540px) {
   .featured-grid { grid-template-columns: 1fr; }
+  .featured-cover { width: 100%; }
+  .featured-info h3 { max-width: 100%; }
 }
 
 /* ---------- Proyectos / tracks ---------- */
