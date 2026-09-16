@@ -17,7 +17,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -28,6 +28,7 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-body);
+  overflow-x: hidden;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -614,6 +615,7 @@ section { padding-top: 120px; }
 }
 .bio-photo {
   flex: 1;
+  min-width: 0;
   height: 100%;
   aspect-ratio: unset;
   object-fit: cover;
