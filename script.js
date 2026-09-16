@@ -1,505 +1,259 @@
-// Genera la waveform superior una sola vez (determinista, no random en cada carga
-// para que sea estable, pero con aspecto de audio real)
+/* ==========================================================
+   D.E.F. Portfolio V2
+   Interacción ligera, accesible y sin dependencias externas.
+   ========================================================== */
+
 function buildWaveform() {
   const svg = document.getElementById('waveform-svg');
-  const points = 220;
+  if (!svg) return;
+  const points = 240;
   const width = 1000;
   const height = 40;
   const mid = height / 2;
-
   let seed = 42;
-  function rand() {
+  const rand = () => {
     seed = (seed * 9301 + 49297) % 233280;
     return seed / 233280;
-  }
-
+  };
   let d = `M 0 ${mid}`;
   for (let i = 0; i <= points; i++) {
     const x = (i / points) * width;
-    const amp = (Math.sin(i * 0.35) * 0.5 + rand() * 0.7) * (mid * 0.85);
+    const amp = (Math.sin(i * 0.34) * 0.45 + rand() * 0.7) * (mid * 0.82);
     d += ` L ${x.toFixed(1)} ${(mid + amp).toFixed(1)}`;
   }
-
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   path.setAttribute('d', d);
   svg.appendChild(path);
 }
 
-// Mueve el playhead (línea roja) según el progreso de scroll de la página
 function initPlayhead() {
   const playhead = document.getElementById('playhead');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function update() {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+  if (!playhead) return;
+  const update = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? window.scrollY / max : 0;
     playhead.style.left = `${(progress * 100).toFixed(2)}%`;
-  }
-
+  };
   update();
-  if (reduceMotion) return;
-  window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', update);
-}
-
-// Recuerda qué bloques (A/B/C) están abiertos mientras se navega por la pestaña
-// (se resetea si se cierra el navegador, para que cada visita empiece limpia)
-const ACCORDION_STORAGE_KEY = 'proyectos-bloques-abiertos';
-
-function getOpenBlocksState() {
-  try {
-    return JSON.parse(sessionStorage.getItem(ACCORDION_STORAGE_KEY)) || {};
-  } catch (e) {
-    return {};
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
   }
 }
 
-function setBlockOpenState(letter, isOpen) {
-  try {
-    const state = getOpenBlocksState();
-    state[letter] = isOpen;
-    sessionStorage.setItem(ACCORDION_STORAGE_KEY, JSON.stringify(state));
-  } catch (e) {
-    // sessionStorage no disponible (modo privado, etc.) — se ignora sin romper la web
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  buildWaveform();
-  initPlayhead();
-  initLightbox();
-  initAccordions();
-  initTrackToggles();
-  initDeepLink();
-  initBioPhotosWidth();
-  initSingleMediaPlayback();
-  initMobileNav();
-});
-
-// Menú móvil: el botón hamburguesa abre/cierra el panel de navegación
-// a pantalla completa por debajo de 720px. Se cierra al elegir un enlace,
-// al pulsar Escape, o si la ventana se ensancha por encima del breakpoint.
 function initMobileNav() {
   const toggle = document.getElementById('nav-toggle');
   const links = document.getElementById('nav-links');
   if (!toggle || !links) return;
-
-  function close() {
+  const close = () => {
     links.classList.remove('is-open');
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-label', 'Abrir menú');
-  }
-  function open() {
-    links.classList.add('is-open');
-    toggle.setAttribute('aria-expanded', 'true');
-    toggle.setAttribute('aria-label', 'Cerrar menú');
-  }
-
+  };
   toggle.addEventListener('click', () => {
-    const isOpen = links.classList.contains('is-open');
-    isOpen ? close() : open();
+    const open = links.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
   });
-
   links.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && links.classList.contains('is-open')) close();
-  });
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 720) close();
-  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  window.addEventListener('resize', () => { if (window.innerWidth > 800) close(); });
 }
 
-// Al reproducir un audio o vídeo, pausa cualquier otro que estuviera sonando,
-// para que nunca se solapen dos reproducciones a la vez.
 function initSingleMediaPlayback() {
-  const mediaEls = Array.from(document.querySelectorAll('audio, video'));
-  mediaEls.forEach(el => {
-    el.addEventListener('play', () => {
-      mediaEls.forEach(other => {
-        if (other !== el && !other.paused) {
-          other.pause();
-        }
+  const media = Array.from(document.querySelectorAll('audio, video'));
+  media.forEach(el => el.addEventListener('play', () => {
+    media.forEach(other => { if (other !== el && !other.paused) other.pause(); });
+  }));
+}
+
+function initFilters() {
+  const buttons = document.querySelectorAll('.filter-button');
+  const cards = document.querySelectorAll('.archive-card');
+  if (!buttons.length || !cards.length) return;
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.filter;
+      buttons.forEach(b => b.classList.toggle('is-active', b === button));
+      cards.forEach(card => {
+        const show = filter === 'all' || card.dataset.category === filter;
+        card.classList.toggle('is-hidden', !show);
       });
     });
   });
 }
 
-// Ajusta el ancho del bloque de fotos de "Sobre mí" para que coincida
-// exactamente con el espacio que ocupan los enlaces de navegación
-// (desde "00:01 Sobre mí" hasta el final de "Contacto"), ya que ambos
-// comparten el mismo margen derecho de la página.
-function initBioPhotosWidth() {
-  const navLinks = document.querySelector('.nav-links');
-  const bioPhotos = document.querySelector('.bio-photos');
-  if (!navLinks || !bioPhotos) return;
-
-  function sync() {
-    if (window.innerWidth <= 900 || getComputedStyle(navLinks).display === 'none') {
-      bioPhotos.style.width = '';
-      return;
-    }
-    const rect = navLinks.getBoundingClientRect();
-    if (rect.width > 0) {
-      bioPhotos.style.width = rect.width + 'px';
-    }
-  }
-
-  sync();
-  window.addEventListener('resize', sync);
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(sync);
-  }
-}
-
-// Deep-linking: si la URL trae un #ancla que apunta a una pieza dentro de un
-// bloque colapsado (A/B/C), lo abre automáticamente y hace scroll hasta ella.
-function initDeepLink() {
-  function openTargetFromHash(animate) {
-    const hash = window.location.hash;
-    if (!hash || hash.length < 2) return;
-    let target;
-    try {
-      target = document.querySelector(hash);
-    } catch (e) {
-      return; // hash no válido como selector
-    }
-    if (!target) return;
-
-    const list = target.closest('.track-list');
-    if (!list) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-    const head = list.previousElementSibling;
-    if (!head || !head.classList.contains('track-group-head')) return;
-
-    // Si el ancla apunta a una pieza con contenido plegable (segundo nivel), abrirla también
-    function openOwnDetail() {
-      const detail = target.matches('.track-detail')
-        ? target
-        : target.querySelector(':scope > .track-detail') || target.closest('article.track')?.querySelector(':scope > .track-detail');
-      if (!detail) return;
-      const meta = detail.closest('article.track')?.querySelector('.track-meta');
-      if (meta) meta.setAttribute('aria-expanded', 'true');
-      detail.style.maxHeight = 'none';
-    }
-
-    function doScroll() {
-      openOwnDetail();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    if (head.getAttribute('aria-expanded') === 'true') {
-      doScroll();
-      return;
-    }
-
-    head.setAttribute('aria-expanded', 'true');
-    const letterEl = head.querySelector('.tc');
-    if (letterEl) setBlockOpenState(letterEl.textContent.trim(), true);
-
-    if (animate) {
-      list.style.maxHeight = list.scrollHeight + 'px';
-      list.addEventListener('transitionend', function onEnd() {
-        list.style.maxHeight = 'none';
-        list.removeEventListener('transitionend', onEnd);
-        doScroll();
-      });
-    } else {
-      // Carga inicial de la página: abrir sin animación y desplazar directamente
-      list.style.maxHeight = 'none';
-      doScroll();
-    }
-  }
-
-  openTargetFromHash(false);
-  window.addEventListener('hashchange', () => openTargetFromHash(true));
-}
-
-// Desplegables de segundo nivel: cada pieza (A1, A2...) se colapsa a su fila
-// de título; se expande al hacer clic en la fila o activar el código con teclado.
-function initTrackToggles() {
-  document.querySelectorAll('.track-detail').forEach(detail => {
-    const article = detail.closest('article.track');
-    if (!article) return;
-    const meta = article.querySelector('.track-meta');
-    if (!meta) return;
-
-    article.classList.add('has-detail');
-    meta.setAttribute('role', 'button');
-    meta.setAttribute('tabindex', '0');
-    meta.setAttribute('aria-expanded', 'false');
-
-    const icon = document.createElement('span');
-    icon.className = 'track-toggle-icon';
-    icon.setAttribute('aria-hidden', 'true');
-    icon.textContent = '▾';
-    meta.appendChild(icon);
-
-    function toggle() {
-      const isOpen = meta.getAttribute('aria-expanded') === 'true';
-      if (isOpen) {
-        detail.style.maxHeight = detail.scrollHeight + 'px';
-        requestAnimationFrame(() => { detail.style.maxHeight = '0px'; });
-        meta.setAttribute('aria-expanded', 'false');
-      } else {
-        meta.setAttribute('aria-expanded', 'true');
-        detail.style.maxHeight = detail.scrollHeight + 'px';
-        detail.addEventListener('transitionend', function onEnd() {
-          if (meta.getAttribute('aria-expanded') === 'true') {
-            detail.style.maxHeight = 'none';
-          }
-          detail.removeEventListener('transitionend', onEnd);
-        });
-      }
-    }
-
-    article.addEventListener('click', (e) => {
-      // Permitir que clics dentro del contenido (audio, vídeo, imágenes, enlaces) funcionen con normalidad
-      if (e.target.closest('.track-detail')) return;
-      if (detail.style.maxHeight === 'none') {
-        detail.style.maxHeight = detail.scrollHeight + 'px';
-        requestAnimationFrame(() => { detail.style.maxHeight = '0px'; });
-        meta.setAttribute('aria-expanded', 'false');
-        return;
-      }
-      toggle();
-    });
-
-    meta.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        article.click();
-      }
-    });
-
-    // Enlace para contraer desde el final de la pieza, sin tener que volver arriba
-    const collapseBtn = document.createElement('button');
-    collapseBtn.type = 'button';
-    collapseBtn.className = 'collapse-footer';
-    collapseBtn.innerHTML = '<span aria-hidden="true">▴</span> Contraer';
-    collapseBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggle();
-      meta.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    detail.appendChild(collapseBtn);
-  });
-}
-// Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic.
-// Recuerda el estado abierto/cerrado durante la sesión de navegación.
-function initAccordions() {
-  const savedState = getOpenBlocksState();
-
-  document.querySelectorAll('.track-group-head').forEach(head => {
-    const list = head.nextElementSibling;
-    if (!list || !list.classList.contains('track-list')) return;
-
-    const letterEl = head.querySelector('.tc');
-    const letter = letterEl ? letterEl.textContent.trim() : null;
-
-    // Contador de subapartados junto al título
-    const count = list.querySelectorAll(':scope > article.track').length;
-    const h3 = head.querySelector('h3');
-    if (h3 && count) {
-      const span = document.createElement('span');
-      span.className = 'item-count';
-      span.textContent = `(${count})`;
-      h3.insertAdjacentElement('afterend', span);
-    }
-
-    // Restaurar estado guardado de esta sesión de navegación (sin animación)
-    if (letter && savedState[letter]) {
-      head.setAttribute('aria-expanded', 'true');
-      list.style.maxHeight = 'none';
-    }
-
-    function toggle() {
-      const isOpen = head.getAttribute('aria-expanded') === 'true';
-      if (isOpen) {
-        list.style.maxHeight = list.scrollHeight + 'px';
-        requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
-        head.setAttribute('aria-expanded', 'false');
-        if (letter) setBlockOpenState(letter, false);
-      } else {
-        head.setAttribute('aria-expanded', 'true');
-        list.style.maxHeight = list.scrollHeight + 'px';
-        // tras la transición, permitir crecer libremente si el contenido cambia (imágenes cargando)
-        list.addEventListener('transitionend', function onEnd() {
-          if (head.getAttribute('aria-expanded') === 'true') {
-            list.style.maxHeight = 'none';
-          }
-          list.removeEventListener('transitionend', onEnd);
-        });
-        if (letter) setBlockOpenState(letter, true);
-      }
-    }
-
-    head.addEventListener('click', () => {
-      // si estaba en 'none' (totalmente abierto), fijar altura actual antes de colapsar
-      if (list.style.maxHeight === 'none') {
-        list.style.maxHeight = list.scrollHeight + 'px';
-        requestAnimationFrame(() => { list.style.maxHeight = '0px'; });
-        head.setAttribute('aria-expanded', 'false');
-        if (letter) setBlockOpenState(letter, false);
-        return;
-      }
-      toggle();
-    });
-
-    head.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        head.click();
-      }
-    });
-
-    // Enlace para contraer desde el final del bloque, sin tener que volver arriba
-    const collapseBtn = document.createElement('button');
-    collapseBtn.type = 'button';
-    collapseBtn.className = 'collapse-footer collapse-footer--block';
-    collapseBtn.innerHTML = '<span aria-hidden="true">▴</span> Contraer bloque';
-    collapseBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggle();
-      head.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    list.appendChild(collapseBtn);
-  });
-}
-
-// Lightbox: clic (o Enter/Espacio con teclado) en imágenes .composition-cover
-// las abre en grande. Si la miniatura tiene data-video, abre un vídeo en su lugar.
-// Cuando la imagen pertenece a una galería (.gallery-row), aparecen flechas
-// izquierda/derecha para pasar a la siguiente foto sin cerrar el lightbox.
-// Mientras está abierto, el foco queda atrapado dentro y se devuelve a la
-// miniatura de origen al cerrar.
 function initLightbox() {
   const overlay = document.getElementById('lightbox');
-  const overlayImg = document.getElementById('lightbox-img');
-  const overlayVideo = document.getElementById('lightbox-video');
+  const img = document.getElementById('lightbox-img');
+  const video = document.getElementById('lightbox-video');
+  const caption = document.getElementById('lightbox-caption');
   const closeBtn = document.getElementById('lightbox-close-btn');
   const prevBtn = document.getElementById('lightbox-prev-btn');
   const nextBtn = document.getElementById('lightbox-next-btn');
-  if (!overlay || !overlayImg || !overlayVideo || !closeBtn) return;
+  if (!overlay || !img || !video || !closeBtn) return;
 
+  let group = [];
+  let index = -1;
   let lastFocused = null;
-  let currentGroup = [];   // elementos navegables del mismo gallery-row
-  let currentIndex = -1;
 
-  function showAt(index) {
-    if (!currentGroup.length) return;
-    currentIndex = (index + currentGroup.length) % currentGroup.length;
-    const el = currentGroup[currentIndex];
+  const isImage = el => Boolean(el.dataset.full) && !el.dataset.video;
+  const getLabel = el => el.querySelector('img')?.alt || el.getAttribute('aria-label') || '';
+
+  function show(el) {
+    if (!el) return;
     const videoSrc = el.dataset.video;
     if (videoSrc) {
-      overlayImg.style.display = 'none';
-      overlayVideo.style.display = 'block';
-      overlayVideo.src = videoSrc;
-      overlayVideo.load();
-      const tryPlay = () => {
-        overlayVideo.removeEventListener('canplay', tryPlay);
-        overlayVideo.play().catch(() => {});
-      };
-      overlayVideo.addEventListener('canplay', tryPlay);
+      img.style.display = 'none';
+      video.style.display = 'block';
+      video.src = videoSrc;
+      video.load();
+      video.play().catch(() => {});
     } else {
-      overlayVideo.pause();
-      overlayVideo.style.display = 'none';
-      overlayImg.style.display = 'block';
-      overlayImg.src = el.dataset.full || el.src;
-      overlayImg.alt = el.alt;
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      video.style.display = 'none';
+      img.style.display = 'block';
+      img.src = el.dataset.full || el.querySelector('img')?.src || '';
+      img.alt = getLabel(el);
     }
+    caption.textContent = getLabel(el);
   }
 
-  function open(el) {
+  function open(el, items = [el]) {
     lastFocused = el;
-    const group = !el.dataset.video ? el.closest('.gallery-row') : null;
-    if (group) {
-      currentGroup = Array.from(group.querySelectorAll('.composition-cover')).filter(item => !item.dataset.video);
-      overlay.classList.add('has-nav', 'fit-tall');
-    } else {
-      currentGroup = [el];
-      overlay.classList.remove('has-nav');
-      overlay.classList.toggle('fit-tall', el.dataset.fitTall === 'true');
-    }
+    group = items.filter(Boolean);
+    index = Math.max(0, group.indexOf(el));
+    overlay.classList.toggle('has-nav', group.length > 1);
     overlay.classList.add('active');
-    showAt(currentGroup.indexOf(el));
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-locked');
+    show(group[index]);
     closeBtn.focus();
-    document.addEventListener('keydown', trapFocus);
   }
 
   function close() {
-    overlay.classList.remove('active', 'has-nav', 'fit-tall');
-    overlayImg.src = '';
-    overlayVideo.pause();
-    overlayVideo.src = '';
-    currentGroup = [];
-    currentIndex = -1;
-    document.removeEventListener('keydown', trapFocus);
+    overlay.classList.remove('active', 'has-nav');
+    overlay.setAttribute('aria-hidden', 'true');
+    img.src = '';
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    document.body.classList.remove('is-locked');
     if (lastFocused) lastFocused.focus();
+    group = [];
+    index = -1;
   }
 
-  function getFocusableInOverlay() {
-    return Array.from(overlay.querySelectorAll('button, video, [tabindex]:not([tabindex="-1"])'))
-      .filter(elm => elm.offsetParent !== null); // solo los visibles
+  function move(delta) {
+    if (group.length < 2) return;
+    index = (index + delta + group.length) % group.length;
+    show(group[index]);
   }
 
-  function trapFocus(e) {
-    if (e.key === 'Escape') {
-      close();
-      return;
-    }
-    if (e.key === 'ArrowLeft' && currentGroup.length > 1) {
-      e.preventDefault();
-      showAt(currentIndex - 1);
-      return;
-    }
-    if (e.key === 'ArrowRight' && currentGroup.length > 1) {
-      e.preventDefault();
-      showAt(currentIndex + 1);
-      return;
-    }
-    if (e.key !== 'Tab') return;
-    const focusable = getFocusableInOverlay();
-    if (focusable.length === 0) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  }
+  document.querySelectorAll('.media-trigger').forEach(el => {
+    el.addEventListener('click', () => open(el));
+  });
 
-  document.querySelectorAll('.composition-cover').forEach(el => {
-    // Hacer las miniaturas accesibles por teclado
-    el.setAttribute('tabindex', '0');
-    el.setAttribute('role', 'button');
-    const action = el.dataset.video ? 'Reproducir vídeo' : 'Ampliar imagen';
-    el.setAttribute('aria-label', `${action}: ${el.alt || ''}`);
-
-    el.addEventListener('click', (e) => {
-      e.stopPropagation();
-      open(el);
-    });
-    el.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        open(el);
+  document.querySelectorAll('[data-gallery]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      const id = el.dataset.gallery;
+      const source = document.getElementById(id);
+      if (source) {
+        const items = Array.from(source.querySelectorAll('img')).map(sourceImg => ({
+          dataset: { full: sourceImg.src },
+          querySelector: () => sourceImg,
+          getAttribute: () => null
+        }));
+        const start = Math.min(0, items.length - 1);
+        open(items[start], items);
+      } else {
+        const groupName = el.dataset.gallery;
+        const items = Array.from(document.querySelectorAll(`[data-gallery="${groupName}"]`));
+        open(el, items);
       }
     });
   });
 
-  if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); showAt(currentIndex - 1); });
-  if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); showAt(currentIndex + 1); });
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) close();
+  // Para los botones de vídeo que también actúan como enlaces de texto.
+  document.querySelectorAll('.text-button[data-video]').forEach(el => {
+    el.addEventListener('click', () => open(el, [el]));
   });
+
   closeBtn.addEventListener('click', close);
+  prevBtn.addEventListener('click', () => move(-1));
+  nextBtn.addEventListener('click', () => move(1));
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', e => {
+    if (!overlay.classList.contains('active')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') move(-1);
+    if (e.key === 'ArrowRight') move(1);
+  });
 }
+
+function initGalleryButtons() {
+  document.querySelectorAll('.gallery-cover[data-gallery]').forEach(button => {
+    button.addEventListener('click', () => {
+      const name = button.dataset.gallery;
+      const items = Array.from(document.querySelectorAll(`.gallery-cover[data-gallery="${name}"]`));
+      const event = new CustomEvent('portfolio-open-gallery', { detail: { element: button, items } });
+      document.dispatchEvent(event);
+    });
+  });
+}
+
+// Galerías visibles: abre directamente todos los botones con el mismo data-gallery.
+function initGalleryBridge() {
+  document.addEventListener('portfolio-open-gallery', e => {
+    const { element, items } = e.detail;
+    const overlay = document.getElementById('lightbox');
+    if (!overlay) return;
+    const img = document.getElementById('lightbox-img');
+    const video = document.getElementById('lightbox-video');
+    const caption = document.getElementById('lightbox-caption');
+    const closeBtn = document.getElementById('lightbox-close-btn');
+    const prevBtn = document.getElementById('lightbox-prev-btn');
+    const nextBtn = document.getElementById('lightbox-next-btn');
+    let index = Math.max(0, items.indexOf(element));
+    const show = () => {
+      const current = items[index];
+      video.pause(); video.removeAttribute('src'); video.load(); video.style.display = 'none';
+      img.style.display = 'block'; img.src = current.dataset.full || current.querySelector('img')?.src || ''; img.alt = current.querySelector('img')?.alt || '';
+      caption.textContent = img.alt;
+    };
+    const move = delta => { index = (index + delta + items.length) % items.length; show(); };
+    const keyHandler = ev => {
+      if (!overlay.classList.contains('active')) return;
+      if (ev.key === 'Escape') close();
+      if (ev.key === 'ArrowLeft' && items.length > 1) move(-1);
+      if (ev.key === 'ArrowRight' && items.length > 1) move(1);
+    };
+    const close = () => {
+      overlay.classList.remove('active', 'has-nav'); overlay.setAttribute('aria-hidden', 'true');
+      img.src = ''; document.body.classList.remove('is-locked'); document.removeEventListener('keydown', keyHandler); element.focus();
+    };
+    overlay.classList.add('active'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.toggle('has-nav', items.length > 1); document.body.classList.add('is-locked');
+    show(); closeBtn.focus();
+    const oldClose = closeBtn.cloneNode(true); closeBtn.replaceWith(oldClose); oldClose.addEventListener('click', close);
+    const oldPrev = prevBtn.cloneNode(true); prevBtn.replaceWith(oldPrev); oldPrev.addEventListener('click', () => move(-1));
+    const oldNext = nextBtn.cloneNode(true); nextBtn.replaceWith(oldNext); oldNext.addEventListener('click', () => move(1));
+    overlay.onclick = ev => { if (ev.target === overlay) close(); };
+    document.addEventListener('keydown', keyHandler);
+  });
+}
+
+function init() {
+  buildWaveform();
+  initPlayhead();
+  initMobileNav();
+  initSingleMediaPlayback();
+  initFilters();
+  initLightbox();
+  initGalleryButtons();
+  initGalleryBridge();
+}
+
+document.addEventListener('DOMContentLoaded', init);
