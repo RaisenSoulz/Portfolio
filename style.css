@@ -284,7 +284,9 @@ section { padding-top: 120px; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(18,17,16,0.85) 0%, rgba(18,17,16,0.35) 100%);
+  background:
+    linear-gradient(to top, rgba(18,17,16,0.6) 0%, rgba(18,17,16,0) 65%),
+    linear-gradient(to right, rgba(18,17,16,0.95) 0%, rgba(18,17,16,0.8) 18%, rgba(18,17,16,0.35) 40%, rgba(18,17,16,0) 62%);
 }
 .track-group-head:hover { filter: brightness(1.1); }
 .track-group-head > * { position: relative; z-index: 1; }
