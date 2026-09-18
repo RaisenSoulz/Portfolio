@@ -268,10 +268,10 @@ section { padding-top: 120px; }
 /* ---------- Proyectos / tracks ---------- */
 .track-group-head {
   position: relative;
-  padding: 40px 6vw 16px;
-  min-height: clamp(140px, 9vw, 260px);
+  padding: 16px 6vw;
+  min-height: clamp(150px, 18vw, 380px);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 14px;
   cursor: pointer;
   user-select: none;
