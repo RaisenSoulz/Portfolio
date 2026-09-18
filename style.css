@@ -269,7 +269,7 @@ section { padding-top: 120px; }
 .track-group-head {
   position: relative;
   padding: 40px 6vw 16px;
-  min-height: 130px;
+  min-height: clamp(140px, 9vw, 260px);
   display: flex;
   align-items: flex-end;
   gap: 14px;
