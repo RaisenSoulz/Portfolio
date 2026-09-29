@@ -65,12 +65,24 @@ function setBlockOpenState(letter, isOpen) {
   }
 }
 
+// Al abrir un bloque (A/B/C/Bonus), todas sus piezas se muestran ya desplegadas,
+// para que el contenido se vea con un solo clic. Cada pieza se puede contraer después.
+function expandAllIn(list) {
+  list.querySelectorAll(':scope > article.track').forEach(article => {
+    const detail = article.querySelector(':scope > .track-detail');
+    const meta = article.querySelector(':scope > .track-meta');
+    if (!detail) return;
+    detail.style.maxHeight = 'none';
+    if (meta) meta.setAttribute('aria-expanded', 'true');
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildWaveform();
   initPlayhead();
   initLightbox();
-  initAccordions();
   initTrackToggles();
+  initAccordions();
   initDeepLink();
   initBioPhotosWidth();
   initSingleMediaPlayback();
@@ -198,6 +210,7 @@ function initDeepLink() {
     }
 
     head.setAttribute('aria-expanded', 'true');
+    expandAllIn(list);
     const letterEl = head.querySelector('.tc');
     if (letterEl) setBlockOpenState(letterEl.textContent.trim(), true);
 
@@ -232,6 +245,14 @@ function initTrackToggles() {
     meta.setAttribute('role', 'button');
     meta.setAttribute('tabindex', '0');
     meta.setAttribute('aria-expanded', 'false');
+
+    const titleEl = detail.querySelector('h3');
+    if (titleEl) {
+      const title = document.createElement('span');
+      title.className = 'track-title';
+      title.textContent = titleEl.textContent.trim();
+      meta.appendChild(title);
+    }
 
     const icon = document.createElement('span');
     icon.className = 'track-toggle-icon';
@@ -289,7 +310,8 @@ function initTrackToggles() {
     detail.appendChild(collapseBtn);
   });
 }
-// Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic.
+// Desplegables de bloque (A/B/C): colapsados por defecto, se expanden al hacer clic
+// y muestran todas sus piezas abiertas.
 // Recuerda el estado abierto/cerrado durante la sesión de navegación.
 function initAccordions() {
   const savedState = getOpenBlocksState();
@@ -314,6 +336,7 @@ function initAccordions() {
     // Restaurar estado guardado de esta sesión de navegación (sin animación)
     if (letter && savedState[letter]) {
       head.setAttribute('aria-expanded', 'true');
+      expandAllIn(list);
       list.style.maxHeight = 'none';
     }
 
@@ -326,6 +349,7 @@ function initAccordions() {
         if (letter) setBlockOpenState(letter, false);
       } else {
         head.setAttribute('aria-expanded', 'true');
+        expandAllIn(list);
         list.style.maxHeight = list.scrollHeight + 'px';
         // tras la transición, permitir crecer libremente si el contenido cambia (imágenes cargando)
         list.addEventListener('transitionend', function onEnd() {
