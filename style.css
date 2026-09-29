@@ -216,6 +216,7 @@ a { color: inherit; text-decoration: none; }
   margin-top: 8px;
 }
 .section-desc { color: var(--fg-dim); margin-top: 10px; }
+.section-hint { color: var(--accent-teal); margin-top: 4px; }
 
 section { padding-top: 120px; }
 
