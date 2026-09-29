@@ -375,11 +375,29 @@ section { padding-top: 120px; }
 .track-meta[role="button"] { cursor: pointer; }
 .track-toggle-icon {
   display: inline-block;
-  margin-left: 10px;
+  margin-left: auto;
   font-family: var(--font-mono);
-  color: var(--fg-faint);
-  font-size: 0.85rem;
+  color: var(--accent-amber);
+  font-size: 1.1rem;
   transition: transform 0.3s;
+}
+.track-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--fg-dim);
+  transition: color 0.2s;
+}
+.track-title::before {
+  content: '·';
+  margin-right: 12px;
+  color: var(--fg-faint);
+}
+.track:hover .track-title { color: var(--fg); }
+/* Con la pieza abierta, el título ya se ve debajo: se oculta en la fila */
+.track-meta[aria-expanded="true"] .track-title { display: none; }
+@media (max-width: 640px) {
+  .track-title { order: 3; flex-basis: 100%; font-size: 0.92rem; }
+  .track-title::before { content: none; }
 }
 .track-meta[aria-expanded="true"] .track-toggle-icon {
   transform: rotate(180deg);
@@ -392,8 +410,9 @@ section { padding-top: 120px; }
 .track-meta {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 12px;
+  gap: 4px 12px;
   padding: 20px 0;
 }
 .track-meta .tc { font-size: 1.05rem; letter-spacing: 0.06em; }
