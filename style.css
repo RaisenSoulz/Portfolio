@@ -306,9 +306,18 @@ section { padding-top: 120px; }
 }
 .track-group-head .toggle-icon {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-amber);
+  background: rgba(18, 17, 16, 0.75);
   font-family: var(--font-mono);
-  color: var(--fg-faint);
-  font-size: 1.1rem;
+  color: var(--accent-amber);
+  font-size: 1.5rem;
+  line-height: 1;
   transition: transform 0.3s;
 }
 .item-count {
